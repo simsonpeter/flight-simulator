@@ -1,0 +1,5 @@
+{
+  "buildCommand": "mkdir -p public && cp -R sky-strike/. public/",
+  "outputDirectory": "public",
+  "framework": null
+}

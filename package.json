@@ -1,0 +1,7 @@
+{
+  "name": "sky-strike",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p public && cp -R sky-strike/. public/"
+  }
+}

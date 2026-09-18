@@ -39,7 +39,11 @@ Then open `http://localhost:8080`.
 
 Progress, XP, unlocked aircraft, and settings are stored in `localStorage`.
 
-## Aircraft
+## Deploy on Vercel
+
+This repo is set up for Vercel. Leave **Framework Preset** on Other / no framework, and do **not** change the Root Directory (keep it the repository root).
+
+The build copies `sky-strike/` into `public/`, so the game is served at `/`.
 
 - **VX-9 RAPTOR** — balanced (starting jet)
 - **VX-11 VIPER** — unlock at 1000 XP
