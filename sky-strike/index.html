@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#05070c" />
+  <title>SKY STRIKE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="game-canvas"></canvas>
+
+    <div id="damage-vignette"></div>
+    <div id="flash-overlay"></div>
+
+    <!-- MAIN MENU -->
+    <section id="screen-menu" class="screen active">
+      <div class="menu-bg-fade"></div>
+      <div class="menu-panel">
+        <p class="menu-kicker">HET VERHAAL BEGINT IN DUITSLAND</p>
+        <h1 class="logo">SKY STRIKE</h1>
+        <p class="menu-tag">Van Keulen naar België</p>
+        <div class="menu-buttons">
+          <button class="btn primary" id="btn-play">SPEEL VERHAAL</button>
+          <button class="btn" id="btn-missions">MISSIONS</button>
+          <button class="btn" id="btn-aircraft">AIRCRAFT</button>
+          <button class="btn" id="btn-settings">SETTINGS</button>
+        </div>
+        <p class="menu-hint" id="menu-progress">XP 0 · MISSION 1 UNLOCKED</p>
+      </div>
+    </section>
+
+    <!-- CHARACTER SELECT -->
+    <section id="screen-character" class="screen">
+      <div class="panel wide">
+        <header class="panel-head">
+          <button class="btn ghost" data-back="menu">TERUG</button>
+          <h2>KIES JOUW KARAKTER</h2>
+          <span></span>
+        </header>
+        <p class="story-lead">Jij speelt het verhaal. Kies wie je bent.</p>
+        <div class="cast-grid" id="character-grid"></div>
+        <button class="btn primary" id="btn-confirm-character">VOLGENDE · VRIEND</button>
+      </div>
+    </section>
+
+    <!-- FRIEND SELECT -->
+    <section id="screen-friend" class="screen">
+      <div class="panel wide">
+        <header class="panel-head">
+          <button class="btn ghost" id="friend-back">TERUG</button>
+          <h2>KIES JE VRIEND</h2>
+          <span></span>
+        </header>
+        <p class="story-lead">Deze vriend nodigt je uit in Keulen.</p>
+        <div class="cast-grid" id="friend-grid"></div>
+        <button class="btn primary" id="btn-confirm-friend">NAAR HET VERHAAL</button>
+      </div>
+    </section>
+
+    <!-- STORY DIALOGUE -->
+    <section id="screen-story" class="screen">
+      <div class="story-card">
+        <p class="menu-kicker" id="story-kicker">KEULEN</p>
+        <h2 id="story-title">Een bericht</h2>
+        <p class="story-speaker" id="story-speaker"></p>
+        <p class="story-text" id="story-text"></p>
+        <button class="btn primary" id="btn-story-next">VERDER</button>
+      </div>
+    </section>
+
+    <!-- DRIVE HUD -->
+    <div id="drive-hud" class="hidden">
+      <div class="hud-top">
+        <div class="camera-badge">TESLA MODEL X</div>
+        <div class="mission-name" id="drive-loc">DUITSLAND · KEULEN</div>
+        <div class="tod-badge wanted">BOEVEN</div>
+      </div>
+      <div class="hud-left">
+        <div class="readout"><span>SPEED</span><strong id="drive-speed">0 KM/H</strong></div>
+        <div class="readout"><span>VLIEGVELD</span><strong id="drive-dist">2.6 KM</strong></div>
+        <div class="boost-wrap">
+          <span>ROUTE</span>
+          <div class="bar"><i id="drive-progress"></i></div>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="hp-wrap">
+          <span>AUTO HP</span>
+          <div class="bar hp"><i id="drive-hp"></i></div>
+          <strong id="drive-hp-txt">100%</strong>
+        </div>
+      </div>
+      <div class="objectives" id="drive-obj">
+        <b>DOEL</b><br>○ Bereik het vliegveld van Keulen<br>○ Ontsnap aan de boeven
+      </div>
+      <div class="toast" id="drive-toast">W / SHIFT: GAS · A D: STUREN · SPATIE: REM · R: BOOST</div>
+      <button id="btn-drive-pause" class="pause-btn" aria-label="Pause">II</button>
+    </div>
+
+    <!-- AIRCRAFT SELECT -->
+    <section id="screen-aircraft" class="screen">
+      <div class="panel wide">
+        <header class="panel-head">
+          <button class="btn ghost" data-back="menu">BACK</button>
+          <h2>AIRCRAFT</h2>
+          <span></span>
+        </header>
+        <div class="aircraft-grid" id="aircraft-grid"></div>
+        <button class="btn primary" id="btn-confirm-aircraft">CONFIRM</button>
+      </div>
+    </section>
+
+    <!-- MISSION SELECT -->
+    <section id="screen-missions" class="screen">
+      <div class="panel wide">
+        <header class="panel-head">
+          <button class="btn ghost" data-back="menu">BACK</button>
+          <h2>MISSIONS</h2>
+          <span></span>
+        </header>
+        <div class="mission-list" id="mission-list"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="screen-settings" class="screen">
+      <div class="panel">
+        <header class="panel-head">
+          <button class="btn ghost" id="settings-back">BACK</button>
+          <h2>SETTINGS</h2>
+          <span></span>
+        </header>
+        <div class="settings-list">
+          <label class="setting"><span>Sound</span>
+            <button class="toggle" id="set-sound" data-on="true">ON</button>
+          </label>
+          <label class="setting"><span>Music</span>
+            <button class="toggle" id="set-music" data-on="true">ON</button>
+          </label>
+          <label class="setting"><span>Graphics</span>
+            <select id="set-graphics">
+              <option value="low">LOW</option>
+              <option value="medium">MEDIUM</option>
+              <option value="high">HIGH</option>
+            </select>
+          </label>
+          <label class="setting"><span>Camera sensitivity</span>
+            <input type="range" id="set-cam-sens" min="0.3" max="2" step="0.1" value="1" />
+          </label>
+          <label class="setting"><span>Flight sensitivity</span>
+            <input type="range" id="set-fly-sens" min="0.4" max="1.8" step="0.1" value="1" />
+          </label>
+          <label class="setting"><span>Invert Y</span>
+            <button class="toggle" id="set-invert" data-on="false">OFF</button>
+          </label>
+          <label class="setting"><span>Show HUD</span>
+            <button class="toggle" id="set-hud" data-on="true">ON</button>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section id="screen-loading" class="screen">
+      <div class="loading-box">
+        <p class="menu-kicker">BRIEFING</p>
+        <h2 id="loading-title">FIRST FLIGHT</h2>
+        <p id="loading-desc">Prepare for takeoff.</p>
+        <div class="load-bar"><div id="load-fill"></div></div>
+        <p id="loading-status">INITIALIZING WORLD…</p>
+      </div>
+    </section>
+
+    <!-- HUD -->
+    <div id="hud" class="hidden">
+      <div class="cockpit-frame hidden" id="cockpit-frame">
+        <div class="cockpit-canopy"></div>
+        <div class="cockpit-panel">
+          <canvas id="horizon-canvas" width="160" height="80"></canvas>
+        </div>
+      </div>
+
+      <div class="hud-top">
+        <div class="camera-badge" id="camera-mode">CHASE</div>
+        <div class="mission-name" id="mission-name">FIRST FLIGHT</div>
+        <div class="tod-badge" id="tod-badge">DAY</div>
+      </div>
+
+      <div class="hud-left">
+        <div class="readout"><span>SPEED</span><strong id="hud-speed">0 KM/H</strong></div>
+        <div class="readout"><span>ALT</span><strong id="hud-alt">12 M</strong></div>
+        <div class="readout"><span>HDG</span><strong id="hud-hdg">000°</strong></div>
+        <div class="readout"><span>THR</span><strong id="hud-thr">00%</strong></div>
+        <div class="boost-wrap">
+          <span>BOOST</span>
+          <div class="bar"><i id="boost-fill"></i></div>
+        </div>
+        <div class="fuel-wrap">
+          <span>FUEL</span>
+          <div class="bar fuel"><i id="fuel-fill"></i></div>
+        </div>
+        <div id="ab-flag" class="ab-flag hidden">AFTERBURNER</div>
+      </div>
+
+      <div class="hud-center">
+        <div class="reticle" id="reticle">
+          <i></i><i></i><i></i><i></i>
+        </div>
+        <div id="lock-box" class="lock-box hidden"></div>
+        <div id="nav-arrow" class="nav-arrow">▲</div>
+        <div id="lock-status" class="lock-status"></div>
+        <div id="missile-warn" class="missile-warn hidden">⚠ MISSILE</div>
+        <div id="crit-warn" class="crit-warn hidden">CRITICAL DAMAGE</div>
+        <div id="toast" class="toast"></div>
+      </div>
+
+      <div class="hud-right">
+        <div class="hp-wrap">
+          <span>HP</span>
+          <div class="bar hp"><i id="hp-fill"></i></div>
+          <strong id="hud-hp">100%</strong>
+        </div>
+        <div class="readout"><span>GUN</span><strong>∞</strong></div>
+        <div class="readout"><span>MISSILES</span><strong id="hud-missiles">6</strong></div>
+        <div class="readout target-block">
+          <span>TARGET</span>
+          <strong id="hud-target">NONE</strong>
+          <small id="hud-tdist">—</small>
+          <small id="hud-talt">—</small>
+          <small id="hud-tspd">—</small>
+          <small id="hud-thp">—</small>
+        </div>
+        <canvas id="radar" width="180" height="180"></canvas>
+      </div>
+
+      <div class="objectives" id="objectives"></div>
+      <div class="score-chip" id="score-chip">XP 0</div>
+      <button id="btn-pause" class="pause-btn" aria-label="Pause">II</button>
+    </div>
+
+    <!-- PAUSE -->
+    <section id="screen-pause" class="screen overlay">
+      <div class="panel">
+        <h2>PAUSED</h2>
+        <div class="menu-buttons">
+          <button class="btn primary" id="btn-resume">RESUME</button>
+          <button class="btn" id="btn-restart">RESTART</button>
+          <button class="btn" id="btn-pause-settings">SETTINGS</button>
+          <button class="btn" id="btn-main-menu">MAIN MENU</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MISSION COMPLETE / FAILED -->
+    <section id="screen-result" class="screen overlay">
+      <div class="panel">
+        <p class="menu-kicker" id="result-kicker">MISSION COMPLETE</p>
+        <h2 id="result-title">OBJECTIVE SECURE</h2>
+        <ul class="result-stats" id="result-stats"></ul>
+        <div class="menu-buttons">
+          <button class="btn primary" id="btn-next-mission">NEXT MISSION</button>
+          <button class="btn" id="btn-result-restart">RESTART MISSION</button>
+          <button class="btn" id="btn-result-menu">MAIN MENU</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOBILE CONTROLS -->
+    <div id="mobile-controls" class="hidden">
+      <div class="stick-zone" id="stick-zone">
+        <div class="stick-base" id="stick-base">
+          <div class="stick-knob" id="stick-knob"></div>
+        </div>
+      </div>
+      <div class="throttle-zone">
+        <span>THR</span>
+        <input type="range" id="throttle-slider" min="0" max="100" value="0" orient="vertical" />
+      </div>
+      <div class="btn-cluster">
+        <button class="mbtn" id="m-look">LOOK</button>
+        <button class="mbtn" id="m-camera">CAMERA</button>
+        <button class="mbtn" id="m-ab">AB</button>
+        <button class="mbtn" id="m-brake">BRAKE</button>
+        <button class="mbtn fire-alt" id="m-missile">MISSILE</button>
+        <button class="mbtn fire" id="m-fire">FIRE</button>
+      </div>
+    </div>
+
+    <div id="orient-hint" class="hidden">For the best flight experience, rotate to landscape.</div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
