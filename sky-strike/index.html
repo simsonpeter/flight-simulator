@@ -35,6 +35,7 @@
         <p class="menu-tag">Van Keulen naar België</p>
         <div class="menu-buttons">
           <button class="btn primary" id="btn-play">SPEEL VERHAAL</button>
+          <button class="btn" id="btn-freedom">BELGIË · VRIJ SPEL</button>
           <button class="btn" id="btn-missions">MISSIONS</button>
           <button class="btn" id="btn-aircraft">AIRCRAFT</button>
           <button class="btn" id="btn-settings">SETTINGS</button>
@@ -44,7 +45,7 @@
     </section>
 
     <!-- CHARACTER SELECT -->
-    <section id="screen-character" class="screen">
+    <section id="screen-character" class="screen screen-live">
       <div class="panel wide">
         <header class="panel-head">
           <button class="btn ghost" data-back="menu">TERUG</button>
@@ -58,7 +59,7 @@
     </section>
 
     <!-- FRIEND SELECT -->
-    <section id="screen-friend" class="screen">
+    <section id="screen-friend" class="screen screen-live">
       <div class="panel wide">
         <header class="panel-head">
           <button class="btn ghost" id="friend-back">TERUG</button>
@@ -109,6 +110,25 @@
       </div>
       <div class="toast" id="drive-toast">W / SHIFT: GAS · A D: STUREN · SPATIE: REM · R: BOOST</div>
       <button id="btn-drive-pause" class="pause-btn" aria-label="Pause">II</button>
+    </div>
+
+    <!-- LIFE / CITY / FLIGHT HUD -->
+    <div id="life-hud" class="hidden">
+      <div class="hud-top">
+        <div class="camera-badge" id="life-badge">BRUSSEL</div>
+        <div class="mission-name" id="life-loc">BELGIË</div>
+        <div class="tod-badge" id="life-money">€ 0</div>
+      </div>
+      <div class="objectives" id="life-obj">Verdien geld. Koop een huis.</div>
+      <div class="job-panel hidden" id="job-panel">
+        <b>HOE VERDIEN JE GELD</b>
+        <div id="job-list"></div>
+      </div>
+      <div class="life-progress hidden" id="life-progress-wrap"><i id="life-progress"></i></div>
+      <div class="toast" id="life-toast"></div>
+      <div id="life-nav" class="life-nav hidden">▲</div>
+      <div id="world-prompt" class="world-prompt hidden">E · ACTIE</div>
+      <button id="btn-life-pause" class="pause-btn" aria-label="Pause">II</button>
     </div>
 
     <!-- AIRCRAFT SELECT -->

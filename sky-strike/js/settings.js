@@ -20,7 +20,12 @@ const defaultSave = () => ({
   selectedFriend: 'daan',
   completedMissions: [],
   bestScores: {},
-  kills: 0
+  kills: 0,
+  money: 0,
+  ticketBought: false,
+  freedomUnlocked: false,
+  ownedHouses: [],
+  ownedCar: null
 });
 
 function detectDefaultGraphics() {

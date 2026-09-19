@@ -148,6 +148,122 @@ canvas#game-canvas {
 #mobile-controls.drive-mode #m-missile,
 #mobile-controls.drive-mode #m-fire { display: none; }
 #mobile-controls.drive-mode #m-ab { grid-column: 1 / -1; }
+#mobile-controls.walk-mode #m-look,
+#mobile-controls.walk-mode #m-camera,
+#mobile-controls.walk-mode #m-missile { display: none; }
+#mobile-controls.walk-mode #m-fire { background: rgba(125, 255, 212, 0.28); color: #d9fff2; }
+.screen-live {
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 8, 16, 0.12) 42%, rgba(5, 8, 16, 0.82) 100%);
+  align-items: flex-end;
+  pointer-events: none;
+}
+.screen-live .panel { pointer-events: auto; margin-bottom: 10px; background: rgba(6, 12, 22, 0.82); }
+.screen-live .panel.wide { max-height: 46vh; width: min(920px, 96%); }
+.screen-live .cast-card p { display: none; }
+.screen-live .cast-card { padding: 10px; }
+.screen-live .cast-avatar { width: 36px; height: 36px; }
+#life-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  font-family: Orbitron, sans-serif;
+  color: var(--hud);
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+#life-hud.hidden { display: none !important; }
+#life-hud .toast {
+  position: absolute;
+  left: 50%;
+  bottom: 24%;
+  transform: translateX(-50%);
+  width: min(520px, 90vw);
+  text-align: center;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+}
+.world-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 34%;
+  transform: translateX(-50%);
+  border: 2px solid var(--gold);
+  background: rgba(0, 12, 10, 0.86);
+  padding: 14px 20px;
+  letter-spacing: 0.1em;
+  font-size: 0.95rem;
+  pointer-events: none;
+  text-align: center;
+  max-width: min(520px, 92vw);
+  box-shadow: 0 0 24px rgba(231, 195, 106, 0.35);
+}
+.world-prompt.job {
+  border-color: var(--hud);
+  box-shadow: 0 0 28px rgba(125, 255, 212, 0.45);
+}
+.world-prompt kbd {
+  display: inline-block;
+  border: 1px solid var(--gold);
+  padding: 2px 8px;
+  margin-right: 6px;
+  font-family: Orbitron, sans-serif;
+}
+.job-panel {
+  position: absolute;
+  right: 12px;
+  top: 48px;
+  width: min(260px, 42vw);
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  font-family: Rajdhani, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+.job-panel b {
+  display: block;
+  font-family: Orbitron, sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  margin-bottom: 8px;
+  color: var(--gold);
+}
+.job-panel .job-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(125,255,212,0.12);
+}
+.job-panel .job-row.active { color: var(--gold); }
+.job-panel .job-hint {
+  margin-top: 8px;
+  opacity: 0.85;
+  font-size: 0.82rem;
+}
+.life-nav {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.6rem;
+  color: var(--hud);
+  text-shadow: 0 0 12px rgba(125,255,212,0.9);
+  transition: transform 0.08s linear;
+}
+.life-nav.hidden { display: none !important; }
+.job-panel.hidden, .world-prompt.hidden { display: none !important; }
+.life-progress {
+  position: absolute;
+  left: 50%;
+  top: 48px;
+  transform: translateX(-50%);
+  width: min(280px, 50vw);
+  height: 5px;
+  background: rgba(125,255,212,0.15);
+}
+.life-progress i { display: block; height: 100%; background: var(--gold); width: 0; }
+#life-hud .pause-btn { pointer-events: auto; }
 .menu-buttons { display: grid; gap: 10px; }
 .btn {
   font-family: Orbitron, sans-serif;

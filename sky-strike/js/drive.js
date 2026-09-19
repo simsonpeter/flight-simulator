@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createCharacterMesh, poseSeated } from './character.js';
 
 function metal(color, extras = {}) {
   return new THREE.MeshStandardMaterial({
@@ -88,10 +89,12 @@ export function createChaseCar(color = 0x1a1a1e) {
 }
 
 export class DriveChase {
-  constructor(scene, camera, audio) {
+  constructor(scene, camera, audio, character, friend) {
     this.scene = scene;
     this.camera = camera;
     this.audio = audio;
+    this.character = character;
+    this.friend = friend;
     this.car = null;
     this.thugs = [];
     this.speed = 18;
@@ -167,6 +170,20 @@ export class DriveChase {
     this.car = createTeslaModelX(0xece7dc);
     this.car.position.set(0, 0.2, 8);
     this.scene.add(this.car);
+    if (this.character) {
+      const you = createCharacterMesh(this.character.id, { scale: 0.85 });
+      poseSeated(you);
+      you.position.set(-0.38, 0.42, 0.35);
+      you.rotation.y = Math.PI;
+      this.car.add(you);
+    }
+    if (this.friend) {
+      const pal = createCharacterMesh(this.friend.id, { scale: 0.85 });
+      poseSeated(pal);
+      pal.position.set(0.38, 0.42, 0.35);
+      pal.rotation.y = Math.PI;
+      this.car.add(pal);
+    }
 
     const lanes = [-4.2, 4.2, 0.4, -2.2];
     for (let i = 0; i < 4; i++) {

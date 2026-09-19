@@ -39,7 +39,7 @@ export function storyBeats(character, friend) {
       kicker: 'AUTOBAHN A4',
       title: 'Ontsnapping',
       speaker: 'Doel',
-      text: `Rijd van Keulen naar het vliegveld. Ontwijk de boeven. Jullie starten in Duitsland. Daarna het luchtruim in, richting België.`,
+      text: `Rijd van Keulen naar het vliegveld. Ontwijk de boeven. Daarna koop je een vliegticket en vlieg je als passagier naar België.`,
       btn: 'START RIT'
     }
   ];
@@ -48,9 +48,29 @@ export function storyBeats(character, friend) {
 export function airportBeat(character, friend) {
   return {
     kicker: 'VLIEGVELD KEULEN',
-    title: 'Naar België',
+    title: 'Vliegticket',
     speaker: friend.name,
-    text: `Goed gereden, ${character.name}. Het toestel staat klaar. We stijgen op in Duitsland en moeten in België terechtkomen. Blijf laag tot de grens.`,
-    btn: 'NAAR HET TOESTEL'
+    text: `We zijn er, ${character.name}. Hier is €400. Koop een ticket naar Brussel bij de balie. Daarna stappen we in het vliegtuig.`,
+    btn: 'NAAR CHECK-IN'
+  };
+}
+
+export function boardingBeat(character) {
+  return {
+    kicker: 'GATE A12',
+    title: 'Boarding',
+    speaker: 'Steward',
+    text: `Welkom aan boord, ${character.name}. Stoel 12A bij het raam. Bestemming Brussel. Gelieve te gaan zitten.`,
+    btn: 'GA ZITTEN'
+  };
+}
+
+export function freedomBeat(character, friend) {
+  return {
+    kicker: 'BELGIË · BRUSSEL',
+    title: 'Freedom',
+    speaker: friend.name,
+    text: `We zijn er, ${character.name}. Je bent vrij. Loop naar de groene lichten, druk op E, en je krijgt een job. Verdien geld, koop een huis, doe wat je wilt.`,
+    btn: 'DE STAD IN'
   };
 }

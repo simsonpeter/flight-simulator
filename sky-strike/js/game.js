@@ -14,6 +14,10 @@ import { MISSIONS, MissionRuntime } from './missions.js';
 import { createAircraftMesh, AIRCRAFT_DEFS, updateExhaust } from './aircraft.js';
 import { DriveChase } from './drive.js';
 import { isMobileDevice } from './settings.js';
+import { CharacterStudio } from './character.js';
+import { AirportTerminal } from './airport.js';
+import { PassengerFlight } from './airliner.js';
+import { FreedomCity } from './freedom.js';
 
 const _fwd = new THREE.Vector3();
 const _to = new THREE.Vector3();
@@ -69,6 +73,10 @@ export class Game {
     this.lookHold = false;
     this.streaks = [];
     this.drive = null;
+    this.studio = null;
+    this.airport = null;
+    this.flight = null;
+    this.city = null;
     this.story = { character: null, friend: null };
 
     const hooks = {
@@ -184,7 +192,7 @@ export class Game {
     this.onState('LOADING', { name: 'TESLA MODEL X', briefing: 'Keulen. Autobahn. Boeven in de achtervolging.', tod: 'DAY' });
     await new Promise((r) => setTimeout(r, 60));
     this._clearScene();
-    this.drive = new DriveChase(this.scene, this.camera, this.audio);
+    this.drive = new DriveChase(this.scene, this.camera, this.audio, character, friend);
     this.drive.build();
     this.paused = false;
     this.mode = 'DRIVING';
@@ -199,6 +207,118 @@ export class Game {
 
   restartDrive() {
     this.startDrive(this.story.character, this.story.friend);
+  }
+
+  _walkHud() {
+    this.desktop.setEnabled(true);
+    this.touch.show(this.mobile);
+    this.hud.show(false);
+    const mob = document.getElementById('mobile-controls');
+    if (mob) {
+      mob.classList.remove('drive-mode');
+      mob.classList.add('walk-mode');
+    }
+    const fire = document.getElementById('m-fire');
+    if (fire) fire.textContent = 'E';
+  }
+
+  startPreview(charId, friendId = null) {
+    this._clearScene();
+    this.studio = new CharacterStudio(this.scene, this.camera);
+    this.studio.build(charId, friendId);
+    this.mode = 'PREVIEW';
+    this.paused = false;
+    this.desktop.setEnabled(false);
+    this.touch.show(false);
+    this.hud.show(false);
+  }
+
+  previewPeople(charId, friendId = null) {
+    if (this.mode !== 'PREVIEW' || !this.studio) this.startPreview(charId, friendId);
+    else this.studio.setPeople(charId, friendId);
+  }
+
+  async startAirport() {
+    this.onState('LOADING', { name: 'VLIEGVELD KEULEN', briefing: 'Koop een ticket naar Brussel en board het toestel.' });
+    await new Promise((r) => setTimeout(r, 50));
+    this._clearScene();
+    this.airport = new AirportTerminal(this.scene, this.camera, this.audio, this.story.character, this.story.friend, this.save);
+    this.airport.build();
+    this.paused = false;
+    this.mode = 'AIRPORT';
+    this.input.resetAxes();
+    this._walkHud();
+    this.onState('AIRPORT');
+  }
+
+  async startFlight() {
+    this.onState('LOADING', { name: 'VLUCHT NAAR BRUSSEL', briefing: 'Stoel 12A. Je vliegt als passagier van Duitsland naar België.' });
+    await new Promise((r) => setTimeout(r, 50));
+    this._clearScene();
+    this.flight = new PassengerFlight(this.scene, this.camera, this.audio, this.story.character, this.story.friend);
+    this.flight.build();
+    this.paused = false;
+    this.mode = 'FLYING';
+    this.input.resetAxes();
+    this._walkHud();
+    this.onState('FLYING');
+  }
+
+  async startFreedom() {
+    this.save.freedomUnlocked = true;
+    if (!this.save.money) this.save.money = 220;
+    this.onState('LOADING', { name: 'BRUSSEL', briefing: 'Freedom. Verdien geld, koop een huis, doe wat je wilt.' });
+    await new Promise((r) => setTimeout(r, 50));
+    this._clearScene();
+    this.city = new FreedomCity(this.scene, this.camera, this.audio, this.story.character, this.story.friend, this.save);
+    this.city.build();
+    this.paused = false;
+    this.mode = 'FREEDOM';
+    this.input.resetAxes();
+    this._walkHud();
+    this.onState('FREEDOM');
+  }
+
+  restartCurrent() {
+    const m = this.mode === 'PAUSED' ? this._resumeMode : this.mode;
+    if (m === 'DRIVING') return this.restartDrive();
+    if (m === 'AIRPORT') return this.startAirport();
+    if (m === 'FLYING') return this.startFlight();
+    if (m === 'FREEDOM') return this.startFreedom();
+    this.restart();
+  }
+
+  _updateAirport(dt) {
+    this.desktop.update();
+    const status = this.airport.update(dt, this.input);
+    this.input.interact = false;
+    this.onState('LIFE_HUD', this.airport.hud());
+    if (status === 'board') {
+      this.mode = 'STORY';
+      this.desktop.setEnabled(false);
+      this.touch.show(false);
+      this.onState('BOARDED');
+    }
+  }
+
+  _updateFlight(dt) {
+    this.desktop.update();
+    const status = this.flight.update(dt, this.input);
+    this.input.interact = false;
+    this.onState('LIFE_HUD', this.flight.hud());
+    if (status === 'landed') {
+      this.mode = 'STORY';
+      this.desktop.setEnabled(false);
+      this.touch.show(false);
+      this.onState('LANDED_BELGIUM');
+    }
+  }
+
+  _updateFreedom(dt) {
+    this.desktop.update();
+    this.city.update(dt, this.input);
+    this.input.interact = false;
+    this.onState('LIFE_HUD', this.city.hud());
   }
 
   _updateDrive(dt) {
@@ -228,27 +348,31 @@ export class Game {
     this.hud.show(false);
     this.touch.show(false);
     this.desktop.setEnabled(false);
-    document.getElementById('mobile-controls')?.classList.remove('drive-mode');
+    document.getElementById('mobile-controls')?.classList.remove('drive-mode', 'walk-mode');
     document.getElementById('drive-hud')?.classList.add('hidden');
+    document.getElementById('life-hud')?.classList.add('hidden');
+    const fire = document.getElementById('m-fire');
+    if (fire) fire.textContent = 'FIRE';
     this._buildAttract();
     this.onState('MAIN_MENU');
   }
 
   togglePause() {
-    if (this.mode === 'DRIVING') {
-      this._resumeMode = 'DRIVING';
+    const live = ['DRIVING', 'AIRPORT', 'FLYING', 'FREEDOM', 'PLAYING'];
+    if (live.includes(this.mode)) {
+      this._resumeMode = this.mode;
       this.paused = true;
       this.mode = 'PAUSED';
       this.desktop.setEnabled(false);
       this.onState('PAUSED');
       return;
     }
-    if (this.mode !== 'PLAYING' && this.mode !== 'PAUSED') return;
-    this.paused = !this.paused;
-    this.mode = this.paused ? 'PAUSED' : (this._resumeMode || 'PLAYING');
-    if (!this.paused) this._resumeMode = null;
-    this.desktop.setEnabled(!this.paused);
-    this.onState(this.paused ? 'PAUSED' : this.mode);
+    if (this.mode !== 'PAUSED') return;
+    this.paused = false;
+    this.mode = this._resumeMode || 'PLAYING';
+    this._resumeMode = null;
+    this.desktop.setEnabled(true);
+    this.onState(this.mode === 'DRIVING' ? 'DRIVING' : this.mode === 'PLAYING' ? 'PLAYING' : this.mode);
   }
 
   _spawnEnemy(type, position, zone) {
@@ -305,12 +429,36 @@ export class Game {
       this.audio.updateMusic(raw, true);
       return;
     }
+    if (this.mode === 'PREVIEW') {
+      this.studio?.update(raw);
+      this.renderer.render(this.scene, this.camera);
+      this.audio.updateMusic(raw, true);
+      return;
+    }
     if (this.mode === 'PAUSED') {
       this.renderer.render(this.scene, this.camera);
       return;
     }
     if (this.mode === 'DRIVING') {
       this._updateDrive(raw);
+      this.renderer.render(this.scene, this.camera);
+      this.audio.updateMusic(raw, true);
+      return;
+    }
+    if (this.mode === 'AIRPORT') {
+      this._updateAirport(raw);
+      this.renderer.render(this.scene, this.camera);
+      this.audio.updateMusic(raw, true);
+      return;
+    }
+    if (this.mode === 'FLYING') {
+      this._updateFlight(raw);
+      this.renderer.render(this.scene, this.camera);
+      this.audio.updateMusic(raw, true);
+      return;
+    }
+    if (this.mode === 'FREEDOM') {
+      this._updateFreedom(raw);
       this.renderer.render(this.scene, this.camera);
       this.audio.updateMusic(raw, true);
       return;

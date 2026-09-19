@@ -9,6 +9,7 @@ export class InputState {
     this.airbrake = false;
     this.afterburner = false;
     this.sensitivity = 1;
+    this.interact = false;
   }
 
   resetAxes() {
@@ -80,6 +81,7 @@ export class DesktopControls {
       this.input.afterburner = true;
       this.hooks.onAfterburner();
     }
+    if (k === 'KeyE') this.input.interact = true;
     if (k === 'KeyF') this.hooks.onLookToggle();
   }
 
