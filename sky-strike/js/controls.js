@@ -26,6 +26,7 @@ export class DesktopControls {
     this.hooks = hooks;
     this.keys = new Set();
     this.enabled = false;
+    this.skipKeyboard = false;
 
     this._onKeyDown = (e) => this.onKeyDown(e);
     this._onKeyUp = (e) => this.onKeyUp(e);
@@ -91,7 +92,7 @@ export class DesktopControls {
   }
 
   onMouseDown(e) {
-    if (!this.enabled) return;
+    if (!this.enabled || this.skipKeyboard) return;
     if (e.button === 0) this.input.fire = true;
     if (e.button === 2) {
       this.input.missile = true;
@@ -111,7 +112,7 @@ export class DesktopControls {
   }
 
   update() {
-    if (!this.enabled) return;
+    if (!this.enabled || this.skipKeyboard) return;
     const k = this.keys;
     this.input.pitch = (k.has('KeyW') ? 1 : 0) - (k.has('KeyS') ? 1 : 0);
     this.input.roll = (k.has('KeyD') ? 1 : 0) - (k.has('KeyA') ? 1 : 0);

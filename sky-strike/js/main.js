@@ -2,7 +2,7 @@ import { Game } from './game.js';
 import { AudioSystem } from './audio.js';
 import { AIRCRAFT_DEFS } from './aircraft.js';
 import { MISSIONS } from './missions.js';
-import { CHARACTERS, FRIENDS, getCharacter, getFriend, storyBeats, airportBeat, boardingBeat, freedomBeat, localizeCharacter, localizeFriend } from './story.js';
+import { CHARACTERS, FRIENDS, getCharacter, getFriend, storyBeats, airportBeat, boardingBeat, freedomBeat, creditsBeat, localizeCharacter, localizeFriend } from './story.js';
 import {
   loadSettings, saveSettings, loadSave, persistSave,
   unlockMission, recordScore, isMobileDevice
@@ -51,7 +51,12 @@ function unlockAudio() {
   audio.setMusic(settings.music);
 }
 
+if (isMobileDevice()) document.body.classList.add('is-mobile');
 document.body.addEventListener('pointerdown', unlockAudio, { once: true });
+document.addEventListener('touchmove', (e) => {
+  if (document.getElementById('mobile-controls')?.classList.contains('hidden')) return;
+  e.preventDefault();
+}, { passive: false });
 
 function renderCast(kind) {
   const list = kind === 'character' ? CHARACTERS : FRIENDS;
@@ -85,6 +90,7 @@ function showStoryBeat(beat) {
   document.getElementById('story-speaker').textContent = beat.speaker || '';
   document.getElementById('story-text').textContent = beat.text;
   document.getElementById('btn-story-next').textContent = beat.btn || tr('resume');
+  document.getElementById('story-card').classList.toggle('credits', !!beat.credit);
   show('story');
 }
 
@@ -273,6 +279,13 @@ function bindSettings() {
     refreshMenuMeta();
     if (screens.character.classList.contains('active')) renderCast('character');
     if (screens.friend.classList.contains('active')) renderCast('friend');
+    if (screens.story.classList.contains('active') && storyQueue[storyIndex]) {
+      if (afterStory === 'freedom') {
+        storyQueue[0] = freedomBeat(getCharacter(selectedCharacter), getFriend(selectedFriend));
+        storyQueue[1] = creditsBeat();
+      }
+      showStoryBeat(storyQueue[storyIndex]);
+    }
   };
   sound.onclick = () => { settings.sound = !settings.sound; paint(); commit(); };
   music.onclick = () => { settings.music = !settings.music; paint(); commit(); };
@@ -342,8 +355,9 @@ game.onState = (state, payload) => {
     save.freedomUnlocked = true;
     persistSave(save);
     const beat = freedomBeat(getCharacter(selectedCharacter), getFriend(selectedFriend));
+    const credits = creditsBeat();
     afterStory = 'freedom';
-    storyQueue = [beat];
+    storyQueue = [beat, credits];
     storyIndex = 0;
     showStoryBeat(beat);
   }

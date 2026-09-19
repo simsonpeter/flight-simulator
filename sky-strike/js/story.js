@@ -81,6 +81,17 @@ export function freedomBeat(character, friend) {
     title: tr('storyFreeTitle'),
     speaker: friend.name,
     text: tr('storyFreeText', { name: character.name }),
-    btn: tr('storyFreeBtn')
+    btn: tr('resume')
+  };
+}
+
+export function creditsBeat() {
+  return {
+    kicker: tr('gameName'),
+    title: tr('creditsTitle'),
+    speaker: '',
+    text: tr('madeBy'),
+    btn: tr('storyFreeBtn'),
+    credit: true
   };
 }

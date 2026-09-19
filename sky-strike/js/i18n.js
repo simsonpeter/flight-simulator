@@ -29,6 +29,7 @@ export const LANGUAGES = [
 const RTL = new Set(['ar', 'he', 'fa']);
 
 const EN = {
+  gameName: 'KEULSEL',
   kicker: 'THE STORY BEGINS IN GERMANY',
   tag: 'From Cologne to Belgium',
   play: 'PLAY STORY',
@@ -192,7 +193,9 @@ const EN = {
   locBelgium: 'BELGIUM · BRUSSELS',
   aachenKm: 'AACHEN  62 km',
   flughafen: 'AIRPORT',
-  belgiumArrow: 'BELGIUM  →'
+  belgiumArrow: 'BELGIUM  →',
+  creditsTitle: 'Credits',
+  madeBy: 'Made by Game Projects'
 };
 
 function overlay(base) {
@@ -202,6 +205,7 @@ function overlay(base) {
 const PACKS = {
   en: EN,
   nl: overlay({
+    gameName: 'KEULSEL',
     kicker: 'HET VERHAAL BEGINT IN DUITSLAND',
     tag: 'Van Keulen naar België',
     play: 'SPEEL VERHAAL',
@@ -364,7 +368,9 @@ const PACKS = {
     locAirport: 'VLIEGVELD',
     locBorder: 'GRENS DE / BE',
     locBelgium: 'BELGIË · BRUSSEL',
-    belgiumArrow: 'BELGIË  →'
+    belgiumArrow: 'BELGIË  →',
+    creditsTitle: 'Credits',
+    madeBy: 'Gemaakt door Game Projects'
   }),
   de: overlay({
     kicker: 'DIE GESCHICHTE BEGINNT IN DEUTSCHLAND', tag: 'Von Köln nach Belgien', play: 'STORY SPIELEN',
@@ -382,7 +388,8 @@ const PACKS = {
     storyBtn2: 'SCHLÜSSEL NEHMEN', storyText3: 'Fahr von Köln zum Flughafen. Weiche den Gangstern aus. Dann kaufe ein Flugticket und fliege als Passagier nach Belgien.',
     storyBtn3: 'Fahrt starten', storyAirText: 'Wir sind da, {name}. Hier sind €400. Kauf am Schalter ein Ticket nach Brüssel.',
     storyFreeText: 'Wir sind da, {name}. Du bist frei. Lauf zu den grünen Lichtern, drücke E, und du bekommst einen Job.',
-    storyFreeBtn: 'IN DIE STADT', locCologne: 'KÖLN', buyTicket: 'Ticket kaufen Köln → Brüssel  €180'
+    storyFreeBtn: 'IN DIE STADT', locCologne: 'KÖLN', buyTicket: 'Ticket kaufen Köln → Brüssel  €180',
+    creditsTitle: 'Credits', madeBy: 'Erstellt von Game Projects'
   }),
   fr: overlay({
     kicker: 'L’HISTOIRE COMMENCE EN ALLEMAGNE', tag: 'De Cologne à la Belgique', play: 'JOUER L’HISTOIRE',
@@ -398,7 +405,8 @@ const PACKS = {
     storyBtn1: 'VERS COLOGNE', storyText2: 'Surprise. Tu reçois la Tesla Model X. Mais il faut partir MAINTENANT. Des voyous dangereux nous poursuivent. Roule vers l’aéroport.',
     storyAirText: 'On y est, {name}. Voici €400. Achète un billet pour Bruxelles au comptoir.',
     storyFreeText: 'On est arrivés, {name}. Tu es libre. Va vers les lumières vertes, appuie sur E, et tu as un job.',
-    locCologne: 'COLOGNE', buyTicket: 'Acheter billet Cologne → Bruxelles  €180'
+    locCologne: 'COLOGNE', buyTicket: 'Acheter billet Cologne → Bruxelles  €180',
+    creditsTitle: 'Crédits', madeBy: 'Créé par Game Projects'
   }),
   es: overlay({
     kicker: 'LA HISTORIA EMPIEZA EN ALEMANIA', tag: 'De Colonia a Bélgica', play: 'JUGAR HISTORIA',
@@ -414,7 +422,8 @@ const PACKS = {
     storyBtn1: 'A COLONIA', storyText2: 'Sorpresa. Te quedas el Tesla Model X. Pero hay que irse YA. Hay maleantes peligrosos detrás. Conduce al aeropuerto.',
     storyAirText: 'Llegamos, {name}. Aquí tienes €400. Compra un billete a Bruselas en el mostrador.',
     storyFreeText: 'Ya estamos, {name}. Eres libre. Ve a las luces verdes, pulsa E y consigues un trabajo.',
-    locCologne: 'COLONIA', buyTicket: 'Comprar billete Colonia → Bruselas  €180'
+    locCologne: 'COLONIA', buyTicket: 'Comprar billete Colonia → Bruselas  €180',
+    creditsTitle: 'Créditos', madeBy: 'Hecho por Game Projects'
   }),
   pt: overlay({
     kicker: 'A HISTÓRIA COMEÇA NA ALEMANHA', tag: 'De Colônia à Bélgica', play: 'JOGAR HISTÓRIA',
@@ -429,7 +438,8 @@ const PACKS = {
     storyText1: 'Hey {name}! Vens a minha casa? Moro em Colônia. Tenho algo grande para ti.',
     storyAirText: 'Chegámos, {name}. Aqui estão €400. Compra um bilhete para Bruxelas no balcão.',
     storyFreeText: 'Estamos cá, {name}. És livre. Vai às luzes verdes, carrega em E e recebes um trabalho.',
-    locCologne: 'COLÔNIA'
+    locCologne: 'COLÔNIA',
+    creditsTitle: 'Créditos', madeBy: 'Feito por Game Projects'
   }),
   it: overlay({
     kicker: 'LA STORIA INIZIA IN GERMANIA', tag: 'Da Colonia al Belgio', play: 'GIOCA LA STORIA',
@@ -442,7 +452,8 @@ const PACKS = {
     freePlay: 'MONDO LIBERO', jobPost: 'Consegna posta', jobTaxi: 'Corsa in taxi', jobOdd: 'Lavoro in municipio',
     storyText1: 'Hey {name}! Vieni a casa mia? Abito a Colonia. Ho qualcosa di grande per te.',
     storyFreeText: 'Siamo arrivati, {name}. Sei libero. Vai alle luci verdi, premi E e ottieni un lavoro.',
-    locCologne: 'COLONIA'
+    locCologne: 'COLONIA',
+    creditsTitle: 'Crediti', madeBy: 'Realizzato da Game Projects'
   }),
   pl: overlay({
     kicker: 'HISTORIA ZACZYNA SIĘ W NIEMCZECH', tag: 'Z Kolonii do Belgii', play: 'GRAJ HISTORIĘ',
@@ -455,7 +466,8 @@ const PACKS = {
     freePlay: 'WOLNY ŚWIAT', jobPost: 'Roznoszenie poczty', jobTaxi: 'Kurs taksówki', jobOdd: 'Zlecenie w ratuszu',
     storyText1: 'Hej {name}! Wpadniesz do mnie? Mieszkam w Kolonii. Mam coś dużego dla ciebie.',
     storyFreeText: 'Jesteśmy, {name}. Jesteś wolny. Idź do zielonych świateł, naciśnij E i weź pracę.',
-    locCologne: 'KOLONIA'
+    locCologne: 'KOLONIA',
+    creditsTitle: 'Napisy', madeBy: 'Stworzone przez Game Projects'
   }),
   sv: overlay({
     kicker: 'HISTORIEN BÖRJAR I TYSKLAND', tag: 'Från Köln till Belgien', play: 'SPELA HISTORIA',
@@ -466,7 +478,8 @@ const PACKS = {
     toastJobs: 'Gå till det gröna ljuset. Tryck E för ett jobb.',
     startJob: 'Starta jobb: {name}  ·  du får €{pay}', brussels: 'BRYSSEL', belgium: 'BELGIEN',
     freePlay: 'FRITT SPEL', jobPost: 'Postutdelning', jobTaxi: 'Taxiresa', jobOdd: 'Uppdrag på stadshuset',
-    locCologne: 'KÖLN'
+    locCologne: 'KÖLN',
+    creditsTitle: 'Eftertext', madeBy: 'Skapad av Game Projects'
   }),
   uk: overlay({
     kicker: 'ІСТОРІЯ ПОЧИНАЄТЬСЯ В НІМЕЧЧИНІ', tag: 'З Кельна до Бельгії', play: 'ГРАТИ ІСТОРІЮ',
@@ -477,7 +490,8 @@ const PACKS = {
     toastJobs: 'Йди до зеленого світла. Натисни E, щоб взяти роботу.',
     startJob: 'Почати роботу: {name}  ·  ти отримуєш €{pay}', brussels: 'БРЮССЕЛЬ', belgium: 'БЕЛЬГІЯ',
     freePlay: 'ВІЛЬНИЙ СВІТ', jobPost: 'Доставка пошти', jobTaxi: 'Поїздка на таксі', jobOdd: 'Робота в мерії',
-    locCologne: 'КЕЛЬН'
+    locCologne: 'КЕЛЬН',
+    creditsTitle: 'Титри', madeBy: 'Зроблено Game Projects'
   }),
   ru: overlay({
     kicker: 'ИСТОРИЯ НАЧИНАЕТСЯ В ГЕРМАНИИ', tag: 'Из Кёльна в Бельгию', play: 'ИГРАТЬ ИСТОРИЮ',
@@ -488,7 +502,8 @@ const PACKS = {
     toastJobs: 'Иди к зелёному свету. Нажми E, чтобы взять работу.',
     startJob: 'Начать работу: {name}  ·  ты получаешь €{pay}', brussels: 'БРЮССЕЛЬ', belgium: 'БЕЛЬГИЯ',
     freePlay: 'СВОБОДНЫЙ МИР', jobPost: 'Доставка почты', jobTaxi: 'Поездка на такси', jobOdd: 'Задание в ратуше',
-    locCologne: 'КЁЛЬН'
+    locCologne: 'КЁЛЬН',
+    creditsTitle: 'Титры', madeBy: 'Сделано Game Projects'
   }),
   el: overlay({
     kicker: 'Η ΙΣΤΟΡΙΑ ΞΕΚΙΝΑ ΣΤΗ ΓΕΡΜΑΝΙΑ', tag: 'Από την Κολωνία στο Βέλγιο', play: 'ΠΑΙΞΕ ΤΗΝ ΙΣΤΟΡΙΑ',
@@ -498,7 +513,8 @@ const PACKS = {
     resume: 'ΣΥΝΕΧΕΙΑ', restart: 'ΕΠΑΝΕΚΚΙΝΗΣΗ', mainMenu: 'ΚΕΝΤΡΙΚΟ ΜΕΝΟΥ', goal: 'ΣΤΟΧΟΣ',
     jobsHow: 'ΠΩΣ ΒΓΑΖΕΙΣ ΧΡΗΜΑΤΑ', toastJobs: 'Πήγαινε στο πράσινο φως. Πάτα E για δουλειά.',
     startJob: 'Έναρξη δουλειάς: {name}  ·  παίρνεις €{pay}', brussels: 'ΒΡΥΞΕΛΛΕΣ', belgium: 'ΒΕΛΓΙΟ',
-    freePlay: 'ΕΛΕΥΘΕΡΟ ΠΑΙΧΝΙΔΙ', locCologne: 'ΚΟΛΩΝΙΑ'
+    freePlay: 'ΕΛΕΥΘΕΡΟ ΠΑΙΧΝΙΔΙ', locCologne: 'ΚΟΛΩΝΙΑ',
+    creditsTitle: 'Συντελεστές', madeBy: 'Δημιουργήθηκε από Game Projects'
   }),
   tr: overlay({
     kicker: 'HİKÂYE ALMANYA’DA BAŞLAR', tag: 'Köln’den Belçika’ya', play: 'HİKÂYEYİ OYNA',
@@ -509,7 +525,8 @@ const PACKS = {
     jobsHow: 'NASIL PARA KAZANIRSIN', toastJobs: 'Yeşil ışığa yürü. İş için E’ye bas.',
     startJob: 'İşi başlat: {name}  ·  €{pay} kazanırsın', brussels: 'BRÜKSEL', belgium: 'BELÇİKA',
     freePlay: 'SERBEST DÜNYA', jobPost: 'Posta dağıtımı', jobTaxi: 'Taksi yolculuğu', jobOdd: 'Belediye işi',
-    locCologne: 'KÖLN'
+    locCologne: 'KÖLN',
+    creditsTitle: 'Jenerik', madeBy: 'Game Projects tarafından yapıldı'
   }),
   ar: overlay({
     kicker: 'تبدأ القصة في ألمانيا', tag: 'من كولونيا إلى بلجيكا', play: 'العب القصة',
@@ -520,7 +537,8 @@ const PACKS = {
     jobsHow: 'كيف تكسب المال', toastJobs: 'امشِ نحو الضوء الأخضر. اضغط E لبدء عمل.',
     startJob: 'بدء العمل: {name}  ·  تربح €{pay}', brussels: 'بروكسل', belgium: 'بلجيكا',
     freePlay: 'عالم حر', jobPost: 'توصيل البريد', jobTaxi: 'رحلة تاكسي', jobOdd: 'مهمة في البلدية',
-    locCologne: 'كولونيا', buyTicket: 'شراء تذكرة كولونيا → بروكسل  €180'
+    locCologne: 'كولونيا', buyTicket: 'شراء تذكرة كولونيا → بروكسل  €180',
+    creditsTitle: 'فريق العمل', madeBy: 'من صنع Game Projects'
   }),
   he: overlay({
     kicker: 'הסיפור מתחיל בגרמניה', tag: 'מקלן לבלגיה', play: 'שחק את הסיפור',
@@ -529,7 +547,8 @@ const PACKS = {
     sound: 'צליל', music: 'מוזיקה', on: 'כן', off: 'לא', paused: 'השהיה', resume: 'המשך',
     restart: 'התחל מחדש', mainMenu: 'תפריט ראשי', goal: 'מטרה', jobsHow: 'איך מרוויחים כסף',
     toastJobs: 'לך לאור הירוק. לחץ E לעבודה.', startJob: 'התחל עבודה: {name}  ·  תרוויח €{pay}',
-    brussels: 'בריסל', belgium: 'בלגיה', freePlay: 'עולם פתוח', locCologne: 'קלן'
+    brussels: 'בריסל', belgium: 'בלגיה', freePlay: 'עולם פתוח', locCologne: 'קלן',
+    creditsTitle: 'קרדיטים', madeBy: 'נוצר על ידי Game Projects'
   }),
   fa: overlay({
     kicker: 'داستان در آلمان شروع می‌شود', tag: 'از کلن تا بلژیک', play: 'بازی داستان',
@@ -539,7 +558,8 @@ const PACKS = {
     resume: 'ادامه', restart: 'از نو', mainMenu: 'منوی اصلی', goal: 'هدف',
     jobsHow: 'چطور پول دربیاور', toastJobs: 'به نور سبز برو. برای کار E را بزن.',
     startJob: 'شروع کار: {name}  ·  €{pay} می‌گیری', brussels: 'بروکسل', belgium: 'بلژیک',
-    freePlay: 'دنیای آزاد', locCologne: 'کلن'
+    freePlay: 'دنیای آزاد', locCologne: 'کلن',
+    creditsTitle: 'عوامل', madeBy: 'ساخته شده توسط Game Projects'
   }),
   hi: overlay({
     kicker: 'कहानी जर्मनी से शुरू होती है', tag: 'कोलोन से बेल्जियम', play: 'कहानी खेलें',
@@ -550,7 +570,8 @@ const PACKS = {
     jobsHow: 'पैसे कैसे कमाएँ', toastJobs: 'हरी रोशनी की ओर चलो. काम के लिए E दबाओ.',
     startJob: 'काम शुरू: {name}  ·  आपको €{pay} मिलेंगे', brussels: 'ब्रुसेल्स', belgium: 'बेल्जियम',
     freePlay: 'मुक्त संसार', jobPost: 'डाक पहुँचाना', jobTaxi: 'टैक्सी सवारी', jobOdd: 'नगर भवन का काम',
-    locCologne: 'कोलोन'
+    locCologne: 'कोलोन',
+    creditsTitle: 'क्रेडिट', madeBy: 'Game Projects द्वारा निर्मित'
   }),
   bn: overlay({
     kicker: 'গল্প জার্মানিতে শুরু', tag: 'কলোন থেকে বেলজিয়াম', play: 'গল্প খেলুন',
@@ -560,7 +581,8 @@ const PACKS = {
     resume: 'চালিয়ে যান', restart: 'আবার', mainMenu: 'মূল মেনু', goal: 'লক্ষ্য',
     jobsHow: 'কীভাবে টাকা আয় করবেন', toastJobs: 'সবুজ আলোর দিকে হাঁটুন। কাজের জন্য E চাপুন।',
     startJob: 'কাজ শুরু: {name}  ·  আপনি পাবেন €{pay}', brussels: 'ব্রাসেলস', belgium: 'বেলজিয়াম',
-    freePlay: 'মুক্ত জগৎ', locCologne: 'কলোন'
+    freePlay: 'মুক্ত জগৎ', locCologne: 'কলোন',
+    creditsTitle: 'ক্রেডিট', madeBy: 'Game Projects দ্বারা তৈরি'
   }),
   zh: overlay({
     kicker: '故事从德国开始', tag: '从科隆到比利时', play: '开始故事',
@@ -571,7 +593,8 @@ const PACKS = {
     jobsHow: '如何赚钱', toastJobs: '走向绿灯。按 E 接工作。',
     startJob: '开始工作：{name}  ·  可赚 €{pay}', brussels: '布鲁塞尔', belgium: '比利时',
     freePlay: '自由世界', jobPost: '送信', jobTaxi: '出租车', jobOdd: '市政厅差事',
-    locCologne: '科隆', buyTicket: '购买机票 科隆 → 布鲁塞尔  €180'
+    locCologne: '科隆', buyTicket: '购买机票 科隆 → 布鲁塞尔  €180',
+    creditsTitle: '制作人员', madeBy: '由 Game Projects 制作'
   }),
   ja: overlay({
     kicker: '物語はドイツから始まる', tag: 'ケルンからベルギーへ', play: 'ストーリーをプレイ',
@@ -582,7 +605,8 @@ const PACKS = {
     jobsHow: 'お金の稼ぎ方', toastJobs: '緑の光へ歩こう。Eで仕事を始める。',
     startJob: '仕事開始：{name}  ·  €{pay}もらえる', brussels: 'ブリュッセル', belgium: 'ベルギー',
     freePlay: 'フリーワールド', jobPost: '郵便配達', jobTaxi: 'タクシー', jobOdd: '市役所の仕事',
-    locCologne: 'ケルン'
+    locCologne: 'ケルン',
+    creditsTitle: 'クレジット', madeBy: 'Game Projects 制作'
   }),
   ko: overlay({
     kicker: '이야기는 독일에서 시작됩니다', tag: '쾰른에서 벨기에로', play: '스토리 플레이',
@@ -593,7 +617,8 @@ const PACKS = {
     toastJobs: '초록 빛으로 가세요. E를 눌러 일을 시작하세요.',
     startJob: '일 시작: {name}  ·  €{pay} 받음', brussels: '브뤼셀', belgium: '벨기에',
     freePlay: '자유 세계', jobPost: '우편 배달', jobTaxi: '택시', jobOdd: '시청 심부름',
-    locCologne: '쾰른'
+    locCologne: '쾰른',
+    creditsTitle: '크레딧', madeBy: 'Game Projects 제작'
   }),
   vi: overlay({
     kicker: 'CÂU CHUYỆN BẮT ĐẦU Ở ĐỨC', tag: 'Từ Cologne đến Bỉ', play: 'CHƠI CÂU CHUYỆN',
@@ -603,7 +628,8 @@ const PACKS = {
     restart: 'CHƠI LẠI', mainMenu: 'MENU CHÍNH', goal: 'MỤC TIÊU', jobsHow: 'CÁCH KIẾM TIỀN',
     toastJobs: 'Đi tới đèn xanh. Nhấn E để nhận việc.',
     startJob: 'Bắt đầu việc: {name}  ·  nhận €{pay}', brussels: 'BRUSSELS', belgium: 'BỈ',
-    freePlay: 'THẾ GIỚI TỰ DO', locCologne: 'COLOGNE'
+    freePlay: 'THẾ GIỚI TỰ DO', locCologne: 'COLOGNE',
+    creditsTitle: 'Credit', madeBy: 'Được tạo bởi Game Projects'
   }),
   th: overlay({
     kicker: 'เรื่องราวเริ่มที่เยอรมนี', tag: 'จากโคโลญสู่เบลเยียม', play: 'เล่นเนื้อเรื่อง',
@@ -613,7 +639,8 @@ const PACKS = {
     restart: 'เริ่มใหม่', mainMenu: 'เมนูหลัก', goal: 'เป้าหมาย', jobsHow: 'วิธีหาเงิน',
     toastJobs: 'เดินไปหาไฟเขียว กด E เพื่อรับงาน',
     startJob: 'เริ่มงาน: {name}  ·  ได้ €{pay}', brussels: 'บรัสเซลส์', belgium: 'เบลเยียม',
-    freePlay: 'โลกเสรี', locCologne: 'โคโลญ'
+    freePlay: 'โลกเสรี', locCologne: 'โคโลญ',
+    creditsTitle: 'เครดิต', madeBy: 'สร้างโดย Game Projects'
   }),
   id: overlay({
     kicker: 'CERITA DIMULAI DI JERMAN', tag: 'Dari Köln ke Belgia', play: 'MAIN CERITA',
@@ -624,7 +651,8 @@ const PACKS = {
     jobsHow: 'CARA MENCARI UANG', toastJobs: 'Jalan ke lampu hijau. Tekan E untuk kerja.',
     startJob: 'Mulai kerja: {name}  ·  kamu dapat €{pay}', brussels: 'BRUSEL', belgium: 'BELGIA',
     freePlay: 'DUNIA BEBAS', jobPost: 'Antar pos', jobTaxi: 'Taksi', jobOdd: 'Tugas balai kota',
-    locCologne: 'KÖLN'
+    locCologne: 'KÖLN',
+    creditsTitle: 'Kredit', madeBy: 'Dibuat oleh Game Projects'
   }),
   sw: overlay({
     kicker: 'HADITHI INAANZA UJERUMANI', tag: 'Kutoka Cologne hadi Ubelgiji', play: 'CHEZA HADITHI',
@@ -634,7 +662,8 @@ const PACKS = {
     resume: 'ENDELEA', restart: 'ANZA TENA', mainMenu: 'MENYU KUU', goal: 'LENGO',
     jobsHow: 'JINSI YA KUTAFUTA PESA', toastJobs: 'Tembea kwenye mwanga wa kijani. Bonyeza E kwa kazi.',
     startJob: 'Anza kazi: {name}  ·  unapata €{pay}', brussels: 'BRUSSELS', belgium: 'UBELGIJI',
-    freePlay: 'DUNIA HURU', locCologne: 'COLOGNE'
+    freePlay: 'DUNIA HURU', locCologne: 'COLOGNE',
+    creditsTitle: 'Sifa', madeBy: 'Imetengenezwa na Game Projects'
   })
 };
 
@@ -672,6 +701,7 @@ export function tr(key, vars = {}) {
 }
 
 export function applyI18n() {
+  document.title = tr('gameName');
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     el.textContent = tr(el.dataset.i18n);
   });

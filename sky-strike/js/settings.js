@@ -40,8 +40,10 @@ function detectDefaultGraphics() {
 
 export function isMobileDevice() {
   const ua = navigator.userAgent || '';
+  const iPadOS = navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1;
   const touch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(ua) || (touch && Math.min(window.innerWidth, window.innerHeight) < 820);
+  const small = Math.min(window.innerWidth, window.innerHeight) < 900;
+  return iPadOS || /Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile/i.test(ua) || (touch && small);
 }
 
 export function loadSettings() {

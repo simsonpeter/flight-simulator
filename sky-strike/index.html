@@ -6,11 +6,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#05070c" />
-  <title>SKY STRIKE</title>
+  <title>KEULSEL</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.4/dist/es-module-shims.js"></script>
   <script type="importmap">
   {
     "imports": {
@@ -31,7 +32,7 @@
       <div class="menu-bg-fade"></div>
       <div class="menu-panel">
         <p class="menu-kicker" data-i18n="kicker">HET VERHAAL BEGINT IN DUITSLAND</p>
-        <h1 class="logo">SKY STRIKE</h1>
+        <h1 class="logo" data-i18n="gameName">KEULSEL</h1>
         <p class="menu-tag" data-i18n="tag">Van Keulen naar België</p>
         <div class="menu-buttons">
           <button class="btn primary" id="btn-play" data-i18n="play">SPEEL VERHAAL</button>
@@ -74,7 +75,7 @@
 
     <!-- STORY DIALOGUE -->
     <section id="screen-story" class="screen">
-      <div class="story-card">
+      <div class="story-card" id="story-card">
         <p class="menu-kicker" id="story-kicker">KEULEN</p>
         <h2 id="story-title">Een bericht</h2>
         <p class="story-speaker" id="story-speaker"></p>
@@ -304,28 +305,31 @@
 
     <!-- MOBILE CONTROLS -->
     <div id="mobile-controls" class="hidden">
+      <button class="mbtn pause" id="m-pause" type="button">II</button>
       <div class="stick-zone" id="stick-zone">
         <div class="stick-base" id="stick-base">
           <div class="stick-knob" id="stick-knob"></div>
         </div>
       </div>
-      <div class="throttle-zone">
-        <span>THR</span>
-        <input type="range" id="throttle-slider" min="0" max="100" value="0" orient="vertical" />
+      <div class="throttle-zone" id="throttle-zone">
+        <span>GAS</span>
+        <div class="throttle-track" id="throttle-track">
+          <div class="throttle-fill" id="throttle-fill"></div>
+        </div>
       </div>
       <div class="btn-cluster">
-        <button class="mbtn" id="m-look">LOOK</button>
-        <button class="mbtn" id="m-camera">CAMERA</button>
-        <button class="mbtn" id="m-ab">AB</button>
-        <button class="mbtn" id="m-brake">BRAKE</button>
-        <button class="mbtn fire-alt" id="m-missile">MISSILE</button>
-        <button class="mbtn fire" id="m-fire">FIRE</button>
+        <button class="mbtn" id="m-look" type="button">LOOK</button>
+        <button class="mbtn" id="m-camera" type="button">CAMERA</button>
+        <button class="mbtn" id="m-ab" type="button">AB</button>
+        <button class="mbtn" id="m-brake" type="button">BRAKE</button>
+        <button class="mbtn fire-alt" id="m-missile" type="button">MISSILE</button>
+        <button class="mbtn fire" id="m-fire" type="button">FIRE</button>
       </div>
     </div>
 
     <div id="orient-hint" class="hidden">For the best flight experience, rotate to landscape.</div>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js?v=m2"></script>
 </body>
 </html>

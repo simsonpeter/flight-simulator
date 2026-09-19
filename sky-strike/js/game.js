@@ -32,8 +32,15 @@ export class Game {
     this.save = save;
     this.quality = settings.graphics;
     this.mobile = isMobileDevice();
+    this.desktop = null;
 
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: this.quality !== 'low', powerPreference: 'high-performance' });
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: this.quality !== 'low' && !this.mobile,
+      powerPreference: this.mobile ? 'default' : 'high-performance',
+      alpha: false,
+      failIfMajorPerformanceCaveat: false
+    });
     this.renderer.setPixelRatio(this._pixelRatio());
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.shadowMap.enabled = this.quality === 'high';
@@ -92,9 +99,11 @@ export class Game {
       setThrottleAbsolute: (v) => { this.absThrottle = v; }
     };
     this.desktop = new DesktopControls(this.input, canvas, hooks);
+    this.desktop.skipKeyboard = this.mobile;
     this.touch = new MobileControls(this.input, hooks);
 
     window.addEventListener('resize', () => this.resize());
+    window.visualViewport?.addEventListener('resize', () => this.resize());
     this._buildAttract();
     this._loop = this._loop.bind(this);
     requestAnimationFrame(this._loop);
@@ -177,9 +186,11 @@ export class Game {
     this._makeStreaks();
     this.mode = 'PLAYING';
     this.desktop.setEnabled(true);
+    this.touch.setMode('fly');
     this.touch.show(this.mobile);
     this.hud.show(true);
     this.touch.syncThrottle(0);
+    document.getElementById('mobile-controls')?.classList.remove('drive-mode', 'walk-mode');
     this.onState('PLAYING', this.missionDef);
     if (this.missionDef.id === 1) this.hud.toast('SHIFT: GAS  ·  S: STIJGEN  ·  naar België');
   }
@@ -197,12 +208,18 @@ export class Game {
     this.drive.build();
     this.paused = false;
     this.mode = 'DRIVING';
+    this.absThrottle = this.mobile ? 0 : null;
     this.input.resetAxes();
     this.desktop.setEnabled(true);
+    this.touch.setMode('drive');
     this.touch.show(this.mobile);
+    this.touch.syncThrottle(0);
     this.hud.show(false);
     const mob = document.getElementById('mobile-controls');
-    if (mob) mob.classList.add('drive-mode');
+    if (mob) {
+      mob.classList.remove('walk-mode');
+      mob.classList.add('drive-mode');
+    }
     this.onState('DRIVING');
   }
 
@@ -211,16 +228,17 @@ export class Game {
   }
 
   _walkHud() {
+    this.absThrottle = this.mobile ? 0 : null;
     this.desktop.setEnabled(true);
+    this.touch.setMode('walk');
     this.touch.show(this.mobile);
+    this.touch.syncThrottle(0);
     this.hud.show(false);
     const mob = document.getElementById('mobile-controls');
     if (mob) {
       mob.classList.remove('drive-mode');
       mob.classList.add('walk-mode');
     }
-    const fire = document.getElementById('m-fire');
-    if (fire) fire.textContent = 'E';
   }
 
   startPreview(charId, friendId = null) {
@@ -766,8 +784,9 @@ export class Game {
   }
 
   resize() {
-    const w = window.innerWidth;
-    const h = Math.max(1, window.innerHeight);
+    const vv = window.visualViewport;
+    const w = Math.round(vv?.width || window.innerWidth);
+    const h = Math.max(1, Math.round(vv?.height || window.innerHeight));
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h, false);
