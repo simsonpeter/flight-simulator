@@ -1,7 +1,10 @@
+import { detectLang } from './i18n.js';
+
 const SAVE_KEY = 'sky-strike-save-v1';
 const SETTINGS_KEY = 'sky-strike-settings-v1';
 
 const defaultSettings = () => ({
+  language: 'nl',
   sound: true,
   music: true,
   graphics: 'high',
@@ -47,9 +50,12 @@ export function loadSettings() {
     if (!raw) {
       const s = defaultSettings();
       s.graphics = detectDefaultGraphics();
+      s.language = detectLang();
       return s;
     }
-    return { ...defaultSettings(), ...JSON.parse(raw) };
+    const parsed = { ...defaultSettings(), ...JSON.parse(raw) };
+    if (!parsed.language) parsed.language = detectLang();
+    return parsed;
   } catch {
     return defaultSettings();
   }

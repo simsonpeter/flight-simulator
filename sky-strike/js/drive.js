@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createCharacterMesh, poseSeated } from './character.js';
+import { tr } from './i18n.js';
 
 function metal(color, extras = {}) {
   return new THREE.MeshStandardMaterial({
@@ -284,9 +285,9 @@ export class DriveChase {
   hud() {
     const left = Math.max(0, this.goal - this.progress);
     const km = (left / 1000).toFixed(1);
-    let loc = 'KEULEN';
-    if (this.progress > 700) loc = 'AACHEN';
-    if (this.progress > 1800) loc = 'VLIEGVELD';
+    let loc = tr('locCologne');
+    if (this.progress > 700) loc = tr('locAachen');
+    if (this.progress > 1800) loc = tr('locAirport');
     return {
       speed: Math.round(this.speed * 9.2),
       hp: this.health / 100,

@@ -2,11 +2,12 @@ import { Game } from './game.js';
 import { AudioSystem } from './audio.js';
 import { AIRCRAFT_DEFS } from './aircraft.js';
 import { MISSIONS } from './missions.js';
-import { CHARACTERS, FRIENDS, getCharacter, getFriend, storyBeats, airportBeat, boardingBeat, freedomBeat } from './story.js';
+import { CHARACTERS, FRIENDS, getCharacter, getFriend, storyBeats, airportBeat, boardingBeat, freedomBeat, localizeCharacter, localizeFriend } from './story.js';
 import {
   loadSettings, saveSettings, loadSave, persistSave,
   unlockMission, recordScore, isMobileDevice
 } from './settings.js';
+import { setLang, applyI18n, fillLanguageSelect, tr } from './i18n.js';
 
 const screens = {
   menu: document.getElementById('screen-menu'),
@@ -22,6 +23,7 @@ const screens = {
 };
 
 let settings = loadSettings();
+setLang(settings.language || 'nl');
 let save = loadSave();
 const audio = new AudioSystem();
 const canvas = document.getElementById('game-canvas');
@@ -56,7 +58,8 @@ function renderCast(kind) {
   const grid = document.getElementById(kind === 'character' ? 'character-grid' : 'friend-grid');
   const current = kind === 'character' ? selectedCharacter : selectedFriend;
   grid.innerHTML = '';
-  list.forEach((c) => {
+  list.forEach((raw) => {
+    const c = kind === 'character' ? localizeCharacter(raw) : localizeFriend(raw);
     const btn = document.createElement('button');
     btn.className = `cast-card${c.id === current ? ' selected' : ''}`;
     btn.innerHTML = `
@@ -81,7 +84,7 @@ function showStoryBeat(beat) {
   document.getElementById('story-title').textContent = beat.title;
   document.getElementById('story-speaker').textContent = beat.speaker || '';
   document.getElementById('story-text').textContent = beat.text;
-  document.getElementById('btn-story-next').textContent = beat.btn || 'VERDER';
+  document.getElementById('btn-story-next').textContent = beat.btn || tr('resume');
   show('story');
 }
 
@@ -102,11 +105,11 @@ function updateDriveHud(data) {
   hud.classList.remove('hidden');
   document.getElementById('drive-speed').textContent = `${data.speed} KM/H`;
   document.getElementById('drive-dist').textContent = `${data.dist} KM`;
-  document.getElementById('drive-loc').textContent = `DUITSLAND · ${data.loc}`;
+  document.getElementById('drive-loc').textContent = `${tr('germany')} · ${data.loc}`;
   document.getElementById('drive-hp').style.width = `${Math.max(0, data.hp * 100)}%`;
   document.getElementById('drive-hp-txt').textContent = `${Math.round(data.hp * 100)}%`;
   document.getElementById('drive-progress').style.width = `${Math.max(0, data.progress * 100)}%`;
-  document.getElementById('drive-obj').innerHTML = `<b>DOEL</b><br>${data.progress > 0.95 ? '✓' : '○'} Bereik het vliegveld<br>${data.hp > 0 ? '○' : '✗'} Ontsnap aan de boeven`;
+  document.getElementById('drive-obj').innerHTML = `<b>${tr('goal')}</b><br>${data.progress > 0.95 ? '✓' : '○'} ${tr('driveReach')}<br>${data.hp > 0 ? '○' : '✗'} ${tr('driveEscape')}`;
 }
 
 function hideDriveHud() {
@@ -125,9 +128,9 @@ function updateLifeHud(data) {
   document.getElementById('life-badge').classList.toggle('wanted', !!data.wanted);
   document.getElementById('life-loc').textContent = data.loc || '';
   const money = document.getElementById('life-money');
-  if (data.money == null) money.textContent = 'RAAM 12A';
+  if (data.money == null) money.textContent = tr('windowSeat');
   else money.textContent = `€ ${Math.max(0, Math.round(data.money))}`;
-  document.getElementById('life-obj').innerHTML = `<b>DOEL</b><br>${data.obj || ''}`;
+  document.getElementById('life-obj').innerHTML = `<b>${tr('goal')}</b><br>${data.obj || ''}`;
   const toast = document.getElementById('life-toast');
   toast.textContent = data.toast || '';
   const prompt = document.getElementById('world-prompt');
@@ -142,7 +145,7 @@ function updateLifeHud(data) {
     jobs.classList.remove('hidden');
     jobList.innerHTML = data.jobs.map((j) =>
       `<div class="job-row${j.active ? ' active' : ''}"><span>${j.active ? '► ' : ''}${j.name}</span><span>${j.dist}</span></div>`
-    ).join('') + `<div class="job-hint">${data.jobHint || 'Loop naar het groene licht. Druk op E.'}</div>`;
+    ).join('') + `<div class="job-hint">${data.jobHint || tr('jobsHint')}</div>`;
   } else {
     jobs.classList.add('hidden');
   }
@@ -163,9 +166,8 @@ function updateLifeHud(data) {
 }
 
 function refreshMenuMeta() {
-  const euro = save.money ? ` · €${save.money}` : '';
   document.getElementById('menu-progress').textContent =
-    `XP ${save.xp} · MISSION ${Math.max(...save.unlockedMissions)} UNLOCKED${euro}`;
+    tr('progress', { xp: save.xp, mission: Math.max(...save.unlockedMissions) }) + (save.money ? ` · €${save.money}` : '');
   const free = document.getElementById('btn-freedom');
   if (free) free.style.display = save.freedomUnlocked ? 'block' : 'none';
 }
@@ -180,7 +182,7 @@ function renderAircraft() {
     btn.className = `ac-card${selected ? ' selected' : ''}${unlocked ? '' : ' locked'}`;
     btn.innerHTML = `
       <h3>${def.name}</h3>
-      <p>${unlocked ? def.role : 'LOCKED · Earn XP to unlock'}</p>
+      <p>${unlocked ? def.role : tr('locked')}</p>
       ${['speed', 'armor', 'agility', 'weapons'].map((k) => `
         <div class="stat-row"><span>${k.toUpperCase()}</span><span>${def.stats[k]}</span></div>
         <div class="stat-bar"><i style="width:${def.stats[k]}%"></i></div>
@@ -207,9 +209,9 @@ function renderMissions() {
     btn.innerHTML = `
       <div>
         <h3>MISSION ${m.id} · ${m.name}</h3>
-        <p>${unlocked ? m.blurb : 'Complete the previous mission to unlock.'}</p>
+        <p>${unlocked ? m.blurb : tr('lockedMission')}</p>
       </div>
-      <div>${unlocked ? (best ? `BEST ${best}` : 'READY') : 'LOCKED'}</div>
+      <div>${unlocked ? (best ? tr('best', { n: best }) : tr('ready')) : 'LOCKED'}</div>
     `;
     btn.addEventListener('click', () => {
       if (!unlocked) return;
@@ -231,23 +233,26 @@ function bindSettings() {
   const sound = document.getElementById('set-sound');
   const music = document.getElementById('set-music');
   const gfx = document.getElementById('set-graphics');
+  const lang = document.getElementById('set-language');
   const cam = document.getElementById('set-cam-sens');
   const fly = document.getElementById('set-fly-sens');
   const inv = document.getElementById('set-invert');
   const hud = document.getElementById('set-hud');
+  fillLanguageSelect(lang, settings.language);
 
   const paint = () => {
     sound.dataset.on = String(settings.sound);
-    sound.textContent = settings.sound ? 'ON' : 'OFF';
+    sound.textContent = settings.sound ? tr('on') : tr('off');
     music.dataset.on = String(settings.music);
-    music.textContent = settings.music ? 'ON' : 'OFF';
+    music.textContent = settings.music ? tr('on') : tr('off');
     gfx.value = settings.graphics;
+    lang.value = settings.language;
     cam.value = settings.cameraSensitivity;
     fly.value = settings.flightSensitivity;
     inv.dataset.on = String(settings.invertY);
-    inv.textContent = settings.invertY ? 'ON' : 'OFF';
+    inv.textContent = settings.invertY ? tr('on') : tr('off');
     hud.dataset.on = String(settings.showHud);
-    hud.textContent = settings.showHud ? 'ON' : 'OFF';
+    hud.textContent = settings.showHud ? tr('on') : tr('off');
   };
   paint();
 
@@ -258,6 +263,17 @@ function bindSettings() {
     audio.setMusic(settings.music);
   };
 
+  lang.onchange = () => {
+    settings.language = lang.value;
+    setLang(settings.language);
+    applyI18n();
+    fillLanguageSelect(lang, settings.language);
+    paint();
+    commit();
+    refreshMenuMeta();
+    if (screens.character.classList.contains('active')) renderCast('character');
+    if (screens.friend.classList.contains('active')) renderCast('friend');
+  };
   sound.onclick = () => { settings.sound = !settings.sound; paint(); commit(); };
   music.onclick = () => { settings.music = !settings.music; paint(); commit(); };
   gfx.onchange = () => { settings.graphics = gfx.value; paint(); commit(); };
@@ -273,7 +289,7 @@ async function launch(id) {
   document.getElementById('loading-title').textContent = MISSIONS.find((m) => m.id === id).name;
   document.getElementById('loading-desc').textContent = MISSIONS.find((m) => m.id === id).briefing;
   document.getElementById('load-fill').style.width = '30%';
-  document.getElementById('loading-status').textContent = 'BUILDING THEATER…';
+    document.getElementById('loading-status').textContent = tr('loading');
   await new Promise((r) => setTimeout(r, 120));
   document.getElementById('load-fill').style.width = '70%';
   await game.startMission(id, save.selectedAircraft);
@@ -285,7 +301,7 @@ game.onState = (state, payload) => {
     show('loading');
     document.getElementById('loading-title').textContent = payload.name;
     document.getElementById('loading-desc').textContent = payload.briefing;
-    document.getElementById('loading-status').textContent = 'ARMING VX SYSTEMS…';
+    document.getElementById('loading-status').textContent = tr('loading');
   }
   if (state === 'PLAYING') {
     hideDriveHud();
@@ -334,9 +350,9 @@ game.onState = (state, payload) => {
   if (state === 'DRIVE_FAILED') {
     hideDriveHud();
     lastResult = { def: { id: 0, name: 'Ontsnapping' }, stats: { kills: 0, time: 0 } };
-    document.getElementById('result-kicker').textContent = 'ONTSMAPPING MISLUKT';
-    document.getElementById('result-title').textContent = 'De boeven hebben de Tesla geramd';
-    document.getElementById('result-stats').innerHTML = `<li><span>Probeer opnieuw</span><span>Keulen</span></li>`;
+    document.getElementById('result-kicker').textContent = tr('driveFailKicker');
+    document.getElementById('result-title').textContent = tr('driveFailTitle');
+    document.getElementById('result-stats').innerHTML = `<li><span>${tr('tryAgain')}</span><span>${tr('cologne')}</span></li>`;
     document.getElementById('btn-next-mission').style.display = 'none';
     show('result');
   }
@@ -357,7 +373,7 @@ game.onState = (state, payload) => {
     if (save.xp >= 1000 && !save.unlockedAircraft.includes('viper')) save.unlockedAircraft.push('viper');
     if (save.xp >= 2500 && !save.unlockedAircraft.includes('titan')) save.unlockedAircraft.push('titan');
     persistSave(save);
-    document.getElementById('result-kicker').textContent = 'MISSION COMPLETE';
+    document.getElementById('result-kicker').textContent = tr('missionComplete');
     document.getElementById('result-title').textContent = def.name;
     document.getElementById('result-stats').innerHTML = `
       <li><span>Kills</span><span>${payload.stats.kills}</span></li>
@@ -372,7 +388,7 @@ game.onState = (state, payload) => {
   }
   if (state === 'MISSION_FAILED') {
     lastResult = payload;
-    document.getElementById('result-kicker').textContent = 'MISSION FAILED';
+    document.getElementById('result-kicker').textContent = tr('missionFailed');
     document.getElementById('result-title').textContent = payload.reason || 'AIRCRAFT DESTROYED';
     document.getElementById('result-stats').innerHTML = `
       <li><span>Kills</span><span>${payload.stats.kills}</span></li>
@@ -469,6 +485,7 @@ document.getElementById('btn-pause').onclick = () => game.togglePause();
 
 bindSettings();
 game.applySettings(settings);
+applyI18n();
 refreshMenuMeta();
 show('menu');
 

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createCharacterMesh, PersonMover, followCam, poseIdle, poseWalk } from './character.js';
+import { tr } from './i18n.js';
 
 function std(color, extras = {}) {
   return new THREE.MeshStandardMaterial({
@@ -125,18 +126,18 @@ export class AirportTerminal {
     this._held = act;
     if (input.interact) input.interact = false;
     if (!this.ticketBought && Math.hypot(px + 5, pz - 16.5) < 3.2) {
-      this.prompt = { key: 'E', text: `Koop vliegticket Keulen → Brussel  €180` };
+      this.prompt = { key: 'E', text: tr('buyTicket') };
       if (edge) {
         const cost = 180;
         if ((this.save.money || 0) < cost) this.save.money = (this.save.money || 0) + 400;
         this.save.money -= cost;
         this.save.ticketBought = true;
         this.ticketBought = true;
-        this.prompt = { key: '✓', text: 'Ticket gekocht. Loop naar de gate.' };
+        this.prompt = { key: '✓', text: tr('ticketBought') };
         if (this.audio) this.audio.playLockSound();
       }
     } else if (this.ticketBought && !this.boarded && pz > 58 && Math.abs(px) < 4) {
-      this.prompt = { key: 'E', text: 'Board het vliegtuig naar België' };
+      this.prompt = { key: 'E', text: tr('boardPlane') };
       if (edge) {
         this.boarded = true;
         return 'board';
@@ -147,12 +148,10 @@ export class AirportTerminal {
 
   hud() {
     return {
-      badge: 'KEULEN CGN',
-      loc: this.ticketBought ? 'GATE A12 · BRUSSEL' : 'CHECK-IN',
+      badge: tr('locCologne') + ' CGN',
+      loc: this.ticketBought ? tr('gate') : tr('checkIn'),
       money: this.save.money || 0,
-      obj: this.ticketBought
-        ? 'Loop naar de gate en board het toestel.'
-        : 'Koop een vliegticket naar België bij de balie.',
+      obj: this.ticketBought ? tr('objGate') : tr('objTicket'),
       prompt: this.prompt
     };
   }

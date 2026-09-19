@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createCharacterMesh, poseSeated, poseIdle } from './character.js';
+import { tr } from './i18n.js';
 
 function metal(color, extras = {}) {
   return new THREE.MeshStandardMaterial({
@@ -203,18 +204,18 @@ export class PassengerFlight {
 
   hud() {
     const p = Math.min(1, this.t / this.duration);
-    let loc = 'KEULEN';
-    if (p > 0.22) loc = 'AACHEN';
-    if (p > 0.48) loc = 'GRENS DE / BE';
-    if (p > 0.72) loc = 'BELGIË · BRUSSEL';
+    let loc = tr('locCologne');
+    if (p > 0.22) loc = tr('locAachen');
+    if (p > 0.48) loc = tr('locBorder');
+    if (p > 0.72) loc = tr('locBelgium');
     return {
-      badge: 'VLUCHT SN 182',
+      badge: tr('flightName'),
       loc,
       money: null,
       obj: p < 0.95
-        ? `Zitplaats 12A · ${this.character.name} vliegt naar België`
-        : 'Landing in Brussel…',
-      prompt: this.t > 4 ? { key: 'E', text: 'Sla over · land in België' } : null,
+        ? tr('seatObj', { name: this.character.name })
+        : tr('landing'),
+      prompt: this.t > 4 ? { key: 'E', text: tr('skipLand') } : null,
       progress: p
     };
   }

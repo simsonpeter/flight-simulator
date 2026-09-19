@@ -1,14 +1,16 @@
+import { tr } from './i18n.js';
+
 export const CHARACTERS = [
-  { id: 'kai', name: 'Kai', role: 'Durfal', color: '#4aa3ff', bio: 'Houdt van snelheid. Blijft rijden als het gevaarlijk wordt.' },
-  { id: 'nora', name: 'Nora', role: 'Strateeg', color: '#7dffd4', bio: 'Ziet de valkuil eerder dan de rest. Koel onder druk.' },
-  { id: 'max', name: 'Max', role: 'Racer', color: '#e7c36a', bio: 'Niemand trekt harder op. De Autobahn is zijn thuis.' },
-  { id: 'lina', name: 'Lina', role: 'Koelbloedig', color: '#ff7a6a', bio: 'Praat weinig, handelt snel. Perfect voor een ontsnapping.' }
+  { id: 'kai', name: 'Kai', color: '#4aa3ff', roleKey: 'charKaiRole', bioKey: 'charKaiBio' },
+  { id: 'nora', name: 'Nora', color: '#7dffd4', roleKey: 'charNoraRole', bioKey: 'charNoraBio' },
+  { id: 'max', name: 'Max', color: '#e7c36a', roleKey: 'charMaxRole', bioKey: 'charMaxBio' },
+  { id: 'lina', name: 'Lina', color: '#ff7a6a', roleKey: 'charLinaRole', bioKey: 'charLinaBio' }
 ];
 
 export const FRIENDS = [
-  { id: 'daan', name: 'Daan', city: 'Keulen', pronoun: 'hij', poss: 'zijn', color: '#7dffd4', trait: 'Grapt zelfs als de sirenes loeien.' },
-  { id: 'yara', name: 'Yara', city: 'Keulen', pronoun: 'zij', poss: 'haar', color: '#e7c36a', trait: 'Regelt alles, inclusief de Tesla.' },
-  { id: 'finn', name: 'Finn', city: 'Keulen', pronoun: 'hij', poss: 'zijn', color: '#4aa3ff', trait: 'Heeft de sleutels al in de aanslag.' }
+  { id: 'daan', name: 'Daan', city: 'Keulen', pronoun: 'hij', poss: 'zijn', color: '#7dffd4', traitKey: 'friendDaan' },
+  { id: 'yara', name: 'Yara', city: 'Keulen', pronoun: 'zij', poss: 'haar', color: '#e7c36a', traitKey: 'friendYara' },
+  { id: 'finn', name: 'Finn', city: 'Keulen', pronoun: 'hij', poss: 'zijn', color: '#4aa3ff', traitKey: 'friendFinn' }
 ];
 
 export function getCharacter(id) {
@@ -19,58 +21,66 @@ export function getFriend(id) {
   return FRIENDS.find((f) => f.id === id) || FRIENDS[0];
 }
 
+export function localizeCharacter(c) {
+  return { ...c, role: tr(c.roleKey), bio: tr(c.bioKey) };
+}
+
+export function localizeFriend(f) {
+  return { ...f, city: tr('locCologne'), trait: tr(f.traitKey) };
+}
+
 export function storyBeats(character, friend) {
   return [
     {
-      kicker: 'DUITSLAND · KEULEN',
-      title: 'Een bericht',
+      kicker: tr('storyKicker1'),
+      title: tr('storyTitle1'),
       speaker: friend.name,
-      text: `Hey ${character.name}! Kom je langs bij mij thuis? Ik woon in Keulen. Ik heb iets groots voor je.`,
-      btn: 'NAAR KEULEN'
+      text: tr('storyText1', { name: character.name }),
+      btn: tr('storyBtn1')
     },
     {
-      kicker: `${friend.poss.toUpperCase()} HUIS`,
-      title: 'Tesla Model X',
+      kicker: tr('storyKicker2', { friend: friend.name }),
+      title: tr('storyTitle2'),
       speaker: friend.name,
-      text: `Verrassing. Jij krijgt de Tesla Model X. Maar we moeten nú weg. Er zitten gevaarlijke boeven achter ons aan. Rijd naar het vliegveld.`,
-      btn: 'PAK DE SLEUTELS'
+      text: tr('storyText2'),
+      btn: tr('storyBtn2')
     },
     {
-      kicker: 'AUTOBAHN A4',
-      title: 'Ontsnapping',
-      speaker: 'Doel',
-      text: `Rijd van Keulen naar het vliegveld. Ontwijk de boeven. Daarna koop je een vliegticket en vlieg je als passagier naar België.`,
-      btn: 'START RIT'
+      kicker: tr('storyKicker3'),
+      title: tr('storyTitle3'),
+      speaker: tr('storySpeaker3'),
+      text: tr('storyText3'),
+      btn: tr('storyBtn3')
     }
   ];
 }
 
 export function airportBeat(character, friend) {
   return {
-    kicker: 'VLIEGVELD KEULEN',
-    title: 'Vliegticket',
+    kicker: tr('storyAirKicker'),
+    title: tr('storyAirTitle'),
     speaker: friend.name,
-    text: `We zijn er, ${character.name}. Hier is €400. Koop een ticket naar Brussel bij de balie. Daarna stappen we in het vliegtuig.`,
-    btn: 'NAAR CHECK-IN'
+    text: tr('storyAirText', { name: character.name }),
+    btn: tr('storyAirBtn')
   };
 }
 
 export function boardingBeat(character) {
   return {
-    kicker: 'GATE A12',
-    title: 'Boarding',
-    speaker: 'Steward',
-    text: `Welkom aan boord, ${character.name}. Stoel 12A bij het raam. Bestemming Brussel. Gelieve te gaan zitten.`,
-    btn: 'GA ZITTEN'
+    kicker: tr('storyBoardKicker'),
+    title: tr('storyBoardTitle'),
+    speaker: tr('storyBoardSpeaker'),
+    text: tr('storyBoardText', { name: character.name }),
+    btn: tr('storyBoardBtn')
   };
 }
 
 export function freedomBeat(character, friend) {
   return {
-    kicker: 'BELGIË · BRUSSEL',
-    title: 'Freedom',
+    kicker: tr('storyFreeKicker'),
+    title: tr('storyFreeTitle'),
     speaker: friend.name,
-    text: `We zijn er, ${character.name}. Je bent vrij. Loop naar de groene lichten, druk op E, en je krijgt een job. Verdien geld, koop een huis, doe wat je wilt.`,
-    btn: 'DE STAD IN'
+    text: tr('storyFreeText', { name: character.name }),
+    btn: tr('storyFreeBtn')
   };
 }

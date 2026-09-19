@@ -30,15 +30,15 @@
     <section id="screen-menu" class="screen active">
       <div class="menu-bg-fade"></div>
       <div class="menu-panel">
-        <p class="menu-kicker">HET VERHAAL BEGINT IN DUITSLAND</p>
+        <p class="menu-kicker" data-i18n="kicker">HET VERHAAL BEGINT IN DUITSLAND</p>
         <h1 class="logo">SKY STRIKE</h1>
-        <p class="menu-tag">Van Keulen naar België</p>
+        <p class="menu-tag" data-i18n="tag">Van Keulen naar België</p>
         <div class="menu-buttons">
-          <button class="btn primary" id="btn-play">SPEEL VERHAAL</button>
-          <button class="btn" id="btn-freedom">BELGIË · VRIJ SPEL</button>
-          <button class="btn" id="btn-missions">MISSIONS</button>
-          <button class="btn" id="btn-aircraft">AIRCRAFT</button>
-          <button class="btn" id="btn-settings">SETTINGS</button>
+          <button class="btn primary" id="btn-play" data-i18n="play">SPEEL VERHAAL</button>
+          <button class="btn" id="btn-freedom" data-i18n="freedom">BELGIË · VRIJ SPEL</button>
+          <button class="btn" id="btn-missions" data-i18n="missions">MISSIONS</button>
+          <button class="btn" id="btn-aircraft" data-i18n="aircraft">AIRCRAFT</button>
+          <button class="btn" id="btn-settings" data-i18n="settings">SETTINGS</button>
         </div>
         <p class="menu-hint" id="menu-progress">XP 0 · MISSION 1 UNLOCKED</p>
       </div>
@@ -48,13 +48,13 @@
     <section id="screen-character" class="screen screen-live">
       <div class="panel wide">
         <header class="panel-head">
-          <button class="btn ghost" data-back="menu">TERUG</button>
-          <h2>KIES JOUW KARAKTER</h2>
+          <button class="btn ghost" data-back="menu" data-i18n="back">TERUG</button>
+          <h2 data-i18n="chooseChar">KIES JOUW KARAKTER</h2>
           <span></span>
         </header>
-        <p class="story-lead">Jij speelt het verhaal. Kies wie je bent.</p>
+        <p class="story-lead" data-i18n="chooseCharLead">Jij speelt het verhaal. Kies wie je bent.</p>
         <div class="cast-grid" id="character-grid"></div>
-        <button class="btn primary" id="btn-confirm-character">VOLGENDE · VRIEND</button>
+        <button class="btn primary" id="btn-confirm-character" data-i18n="nextFriend">VOLGENDE · VRIEND</button>
       </div>
     </section>
 
@@ -62,13 +62,13 @@
     <section id="screen-friend" class="screen screen-live">
       <div class="panel wide">
         <header class="panel-head">
-          <button class="btn ghost" id="friend-back">TERUG</button>
-          <h2>KIES JE VRIEND</h2>
+          <button class="btn ghost" id="friend-back" data-i18n="back">TERUG</button>
+          <h2 data-i18n="chooseFriend">KIES JE VRIEND</h2>
           <span></span>
         </header>
-        <p class="story-lead">Deze vriend nodigt je uit in Keulen.</p>
+        <p class="story-lead" data-i18n="chooseFriendLead">Deze vriend nodigt je uit in Keulen.</p>
         <div class="cast-grid" id="friend-grid"></div>
-        <button class="btn primary" id="btn-confirm-friend">NAAR HET VERHAAL</button>
+        <button class="btn primary" id="btn-confirm-friend" data-i18n="toStory">NAAR HET VERHAAL</button>
       </div>
     </section>
 
@@ -88,19 +88,19 @@
       <div class="hud-top">
         <div class="camera-badge">TESLA MODEL X</div>
         <div class="mission-name" id="drive-loc">DUITSLAND · KEULEN</div>
-        <div class="tod-badge wanted">BOEVEN</div>
+        <div class="tod-badge wanted" data-i18n="thugs">BOEVEN</div>
       </div>
       <div class="hud-left">
         <div class="readout"><span>SPEED</span><strong id="drive-speed">0 KM/H</strong></div>
-        <div class="readout"><span>VLIEGVELD</span><strong id="drive-dist">2.6 KM</strong></div>
+        <div class="readout"><span data-i18n="airportLabel">VLIEGVELD</span><strong id="drive-dist">2.6 KM</strong></div>
         <div class="boost-wrap">
-          <span>ROUTE</span>
+          <span data-i18n="route">ROUTE</span>
           <div class="bar"><i id="drive-progress"></i></div>
         </div>
       </div>
       <div class="hud-right">
         <div class="hp-wrap">
-          <span>AUTO HP</span>
+          <span data-i18n="carHp">AUTO HP</span>
           <div class="bar hp"><i id="drive-hp"></i></div>
           <strong id="drive-hp-txt">100%</strong>
         </div>
@@ -108,7 +108,7 @@
       <div class="objectives" id="drive-obj">
         <b>DOEL</b><br>○ Bereik het vliegveld van Keulen<br>○ Ontsnap aan de boeven
       </div>
-      <div class="toast" id="drive-toast">W / SHIFT: GAS · A D: STUREN · SPATIE: REM · R: BOOST</div>
+      <div class="toast" id="drive-toast" data-i18n="driveHint">W / SHIFT: GAS · A D: STUREN · SPATIE: REM · R: BOOST</div>
       <button id="btn-drive-pause" class="pause-btn" aria-label="Pause">II</button>
     </div>
 
@@ -121,7 +121,7 @@
       </div>
       <div class="objectives" id="life-obj">Verdien geld. Koop een huis.</div>
       <div class="job-panel hidden" id="job-panel">
-        <b>HOE VERDIEN JE GELD</b>
+        <b data-i18n="jobsHow">HOE VERDIEN JE GELD</b>
         <div id="job-list"></div>
       </div>
       <div class="life-progress hidden" id="life-progress-wrap"><i id="life-progress"></i></div>
@@ -135,12 +135,12 @@
     <section id="screen-aircraft" class="screen">
       <div class="panel wide">
         <header class="panel-head">
-          <button class="btn ghost" data-back="menu">BACK</button>
-          <h2>AIRCRAFT</h2>
+          <button class="btn ghost" data-back="menu" data-i18n="back">BACK</button>
+          <h2 data-i18n="aircraft">AIRCRAFT</h2>
           <span></span>
         </header>
         <div class="aircraft-grid" id="aircraft-grid"></div>
-        <button class="btn primary" id="btn-confirm-aircraft">CONFIRM</button>
+        <button class="btn primary" id="btn-confirm-aircraft" data-i18n="confirm">CONFIRM</button>
       </div>
     </section>
 
@@ -148,8 +148,8 @@
     <section id="screen-missions" class="screen">
       <div class="panel wide">
         <header class="panel-head">
-          <button class="btn ghost" data-back="menu">BACK</button>
-          <h2>MISSIONS</h2>
+          <button class="btn ghost" data-back="menu" data-i18n="back">BACK</button>
+          <h2 data-i18n="missions">MISSIONS</h2>
           <span></span>
         </header>
         <div class="mission-list" id="mission-list"></div>
@@ -160,34 +160,37 @@
     <section id="screen-settings" class="screen">
       <div class="panel">
         <header class="panel-head">
-          <button class="btn ghost" id="settings-back">BACK</button>
-          <h2>SETTINGS</h2>
+          <button class="btn ghost" id="settings-back" data-i18n="back">BACK</button>
+          <h2 data-i18n="settings">SETTINGS</h2>
           <span></span>
         </header>
         <div class="settings-list">
-          <label class="setting"><span>Sound</span>
+          <label class="setting lang-setting"><span data-i18n="language">Language</span>
+            <select id="set-language"></select>
+          </label>
+          <label class="setting"><span data-i18n="sound">Sound</span>
             <button class="toggle" id="set-sound" data-on="true">ON</button>
           </label>
-          <label class="setting"><span>Music</span>
+          <label class="setting"><span data-i18n="music">Music</span>
             <button class="toggle" id="set-music" data-on="true">ON</button>
           </label>
-          <label class="setting"><span>Graphics</span>
+          <label class="setting"><span data-i18n="graphics">Graphics</span>
             <select id="set-graphics">
-              <option value="low">LOW</option>
-              <option value="medium">MEDIUM</option>
-              <option value="high">HIGH</option>
+              <option value="low" data-i18n="low">LOW</option>
+              <option value="medium" data-i18n="medium">MEDIUM</option>
+              <option value="high" data-i18n="high">HIGH</option>
             </select>
           </label>
-          <label class="setting"><span>Camera sensitivity</span>
+          <label class="setting"><span data-i18n="camSens">Camera sensitivity</span>
             <input type="range" id="set-cam-sens" min="0.3" max="2" step="0.1" value="1" />
           </label>
-          <label class="setting"><span>Flight sensitivity</span>
+          <label class="setting"><span data-i18n="flySens">Flight sensitivity</span>
             <input type="range" id="set-fly-sens" min="0.4" max="1.8" step="0.1" value="1" />
           </label>
-          <label class="setting"><span>Invert Y</span>
+          <label class="setting"><span data-i18n="invertY">Invert Y</span>
             <button class="toggle" id="set-invert" data-on="false">OFF</button>
           </label>
-          <label class="setting"><span>Show HUD</span>
+          <label class="setting"><span data-i18n="showHud">Show HUD</span>
             <button class="toggle" id="set-hud" data-on="true">ON</button>
           </label>
         </div>
@@ -197,7 +200,7 @@
     <!-- LOADING -->
     <section id="screen-loading" class="screen">
       <div class="loading-box">
-        <p class="menu-kicker">BRIEFING</p>
+        <p class="menu-kicker" data-i18n="briefing">BRIEFING</p>
         <h2 id="loading-title">FIRST FLIGHT</h2>
         <p id="loading-desc">Prepare for takeoff.</p>
         <div class="load-bar"><div id="load-fill"></div></div>
@@ -275,12 +278,12 @@
     <!-- PAUSE -->
     <section id="screen-pause" class="screen overlay">
       <div class="panel">
-        <h2>PAUSED</h2>
+        <h2 data-i18n="paused">PAUSED</h2>
         <div class="menu-buttons">
-          <button class="btn primary" id="btn-resume">RESUME</button>
-          <button class="btn" id="btn-restart">RESTART</button>
-          <button class="btn" id="btn-pause-settings">SETTINGS</button>
-          <button class="btn" id="btn-main-menu">MAIN MENU</button>
+          <button class="btn primary" id="btn-resume" data-i18n="resume">RESUME</button>
+          <button class="btn" id="btn-restart" data-i18n="restart">RESTART</button>
+          <button class="btn" id="btn-pause-settings" data-i18n="settings">SETTINGS</button>
+          <button class="btn" id="btn-main-menu" data-i18n="mainMenu">MAIN MENU</button>
         </div>
       </div>
     </section>
@@ -292,9 +295,9 @@
         <h2 id="result-title">OBJECTIVE SECURE</h2>
         <ul class="result-stats" id="result-stats"></ul>
         <div class="menu-buttons">
-          <button class="btn primary" id="btn-next-mission">NEXT MISSION</button>
-          <button class="btn" id="btn-result-restart">RESTART MISSION</button>
-          <button class="btn" id="btn-result-menu">MAIN MENU</button>
+          <button class="btn primary" id="btn-next-mission" data-i18n="nextMission">NEXT MISSION</button>
+          <button class="btn" id="btn-result-restart" data-i18n="restartMission">RESTART MISSION</button>
+          <button class="btn" id="btn-result-menu" data-i18n="mainMenu">MAIN MENU</button>
         </div>
       </div>
     </section>

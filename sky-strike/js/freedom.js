@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createCharacterMesh, PersonMover, followCam, poseWalk, poseIdle, poseSeated, recolorTop } from './character.js';
 import { createTeslaModelX, createChaseCar } from './drive.js';
+import { tr } from './i18n.js';
 
 function std(color, extras = {}) {
   return new THREE.MeshStandardMaterial({
@@ -11,14 +12,14 @@ function std(color, extras = {}) {
 }
 
 export const HOUSES = [
-  { id: 'studio', name: 'Studio Schaarbeek', price: 1800, x: -42, z: 38, color: 0xb08a78 },
-  { id: 'rijhuis', name: 'Rijhuis Brussel', price: 3500, x: 48, z: -18, color: 0xc45c3a },
-  { id: 'villa', name: 'Villa Tervuren', price: 6200, x: -8, z: 78, color: 0xd8c4a0 }
+  { id: 'studio', nameKey: 'houseStudio', price: 1800, x: -42, z: 38, color: 0xb08a78 },
+  { id: 'rijhuis', nameKey: 'houseTown', price: 3500, x: 48, z: -18, color: 0xc45c3a },
+  { id: 'villa', nameKey: 'houseVilla', price: 6200, x: -8, z: 78, color: 0xd8c4a0 }
 ];
 
 export const SHOP_ITEMS = [
-  { id: 'outfit', name: 'Nieuwe outfit', price: 90, kind: 'clothes' },
-  { id: 'sport', name: 'Sportwagen', price: 950, kind: 'car' }
+  { id: 'outfit', nameKey: 'itemOutfit', price: 90, kind: 'clothes' },
+  { id: 'sport', nameKey: 'itemSport', price: 950, kind: 'car' }
 ];
 
 function aabb(x, z, w, d, list) {
@@ -138,7 +139,7 @@ export class FreedomCity {
     this.friendMesh.position.set(1.4, 0, -10);
     this.scene.add(this.friendMesh);
 
-    this._say('Loop naar het groene licht voor je. Druk op E om een job te starten.');
+    this._say(tr('toastJobs'));
   }
 
   _roads() {
@@ -272,11 +273,12 @@ export class FreedomCity {
 
   _jobs() {
     this.markers = [
-      { id: 'post', name: 'Post bezorgen', pay: 160, x: 0, z: 10, phase: 'offer', drop: { x: -54, z: 0 } },
-      { id: 'taxi', name: 'Taxi rit', pay: 240, x: -14, z: 6, phase: 'offer', drop: { x: 54, z: -36 } },
-      { id: 'klus', name: 'Klusje stadhuis', pay: 110, x: 14, z: 8, phase: 'offer', drop: null }
+      { id: 'post', nameKey: 'jobPost', pay: 160, x: 0, z: 10, phase: 'offer', drop: { x: -54, z: 0 } },
+      { id: 'taxi', nameKey: 'jobTaxi', pay: 240, x: -14, z: 6, phase: 'offer', drop: { x: 54, z: -36 } },
+      { id: 'klus', nameKey: 'jobOdd', pay: 110, x: 14, z: 8, phase: 'offer', drop: null }
     ];
     this.markers.forEach((m) => {
+      m.name = tr(m.nameKey);
       const beacon = makeBeacon(m.x, m.z, 0x7dffd4, `JOB  €${m.pay}`);
       this.scene.add(beacon);
       m.beacon = beacon;
@@ -309,7 +311,7 @@ export class FreedomCity {
     this.mover.inCar = true;
     this.player.visible = false;
     poseSeated(this.player);
-    this._say('Auto. W gas · A/D sturen · Spatie rem · E uitstappen');
+    this._say(tr('carHint'));
   }
 
   _exitCar() {
@@ -388,7 +390,7 @@ export class FreedomCity {
       this._jobTick(dt);
       this.tryDeliver(input);
       if (!(this.job?.phase === 'drop' && this.job.drop && this._near(this.job.drop.x, this.job.drop.z, 4.2))) {
-        this.prompt = this.prompt || { key: 'E', text: 'Stap uit' };
+        this.prompt = this.prompt || { key: 'E', text: tr('exitCar') };
         if (this._pressed(input)) this._exitCar();
       }
       return 'ok';
@@ -405,7 +407,7 @@ export class FreedomCity {
     if (!this.prompt) {
       const parked = this.cars.find((c) => !c.taken && this._near(c.mesh.position.x, c.mesh.position.z, 3.4));
       if (parked) {
-        this.prompt = { key: 'E', text: 'Stap in de auto' };
+        this.prompt = { key: 'E', text: tr('enterCar') };
         this._enterCar(parked, input);
       }
     }
@@ -420,7 +422,7 @@ export class FreedomCity {
       this.prompt = {
         key: 'E',
         job: true,
-        text: `Start job: ${m.name}  ·  je krijgt €${m.pay}`
+        text: tr('startJob', { name: tr(m.nameKey || 'jobPost'), pay: m.pay })
       };
       if (this._pressed(input)) this._startJob(m);
       return;
@@ -430,10 +432,10 @@ export class FreedomCity {
       if (!this._near(h.x, h.z + 5.2, 3.4)) continue;
       const owned = this.save.ownedHouses.includes(h.id);
       if (owned) {
-        this.prompt = { key: 'E', text: `Ga naar binnen · ${h.name}` };
+        this.prompt = { key: 'E', text: tr('enterHouse', { name: tr(h.nameKey) }) };
         if (this._pressed(input)) this._openHouse(h);
       } else {
-        this.prompt = { key: 'E', text: `Koop ${h.name}  €${h.price}` };
+        this.prompt = { key: 'E', text: tr('buyHouse', { name: tr(h.nameKey), price: h.price }) };
         if (this._pressed(input)) this._buyHouse(h);
       }
       return;
@@ -441,13 +443,13 @@ export class FreedomCity {
 
     if (this._near(this.shopPos.x, this.shopPos.z, 3.5)) {
       const item = this.save.ownedCar === 'sport' ? SHOP_ITEMS[0] : SHOP_ITEMS[1];
-      this.prompt = { key: 'E', text: `Winkel · ${item.name}  €${item.price}` };
+      this.prompt = { key: 'E', text: tr('shopBuy', { name: tr(item.nameKey), price: item.price }) };
       if (this._pressed(input)) this._buyItem(item);
       return;
     }
 
     if (this._near(this.atmPos.x, this.atmPos.z, 3.2)) {
-      this.prompt = { key: 'E', text: 'Pinautomaat · +€40 fooi van een klus' };
+      this.prompt = { key: 'E', text: tr('atm') };
       if (this._pressed(input)) {
         this.save.money += 40;
         this._say('+€40');
@@ -467,8 +469,8 @@ export class FreedomCity {
       this.job.dropMesh = mark;
     }
     this._say(m.drop
-      ? `Job gestart: ${m.name}. Volg de gele pijl en druk E bij het gele licht.`
-      : `Job gestart: ${m.name}. Blijf 4 seconden bij het groene licht.`);
+      ? tr('jobStartDrop', { name: tr(m.nameKey) })
+      : tr('jobStartWork', { name: tr(m.nameKey) }));
     if (this.audio) this.audio.playLockSound();
   }
 
@@ -494,13 +496,13 @@ export class FreedomCity {
     const j = this.job;
     if (j.phase === 'drop' && j.drop) {
       if (this._near(j.drop.x, j.drop.z, 8)) {
-        this.prompt = { key: 'E', job: true, text: `Lever af: ${j.name}  ·  +€${j.pay}` };
+        this.prompt = { key: 'E', job: true, text: tr('deliverJob', { name: tr(j.nameKey), pay: j.pay }) };
       }
     }
     if (j.phase === 'work') {
       if (this._near(j.x, j.z, 6)) {
         j.work += dt;
-        this.prompt = { key: '…', job: true, text: `Bezig met ${j.name}… ${Math.min(100, Math.round((j.work / 4) * 100))}%` };
+        this.prompt = { key: '…', job: true, text: tr('workingJob', { name: tr(j.nameKey), pct: Math.min(100, Math.round((j.work / 4) * 100)) }) };
         if (j.work > 4) this._finishJob();
       }
     }
@@ -514,7 +516,7 @@ export class FreedomCity {
   _finishJob() {
     const pay = this.job.pay;
     this.save.money += pay;
-    this._say(`Klaar! ${this.job.name}  +€${pay}. Pak een nieuw groen licht voor de volgende job.`);
+    this._say(tr('jobDone', { name: tr(this.job.nameKey), pay }));
     const src = this.markers.find((m) => m.id === this.job.id);
     if (this.job.dropMesh) this.scene.remove(this.job.dropMesh);
     if (src) {
@@ -527,34 +529,34 @@ export class FreedomCity {
 
   _buyHouse(h) {
     if (this.save.money < h.price) {
-      this._say('Niet genoeg geld. Doe jobs.');
+      this._say(tr('noMoney'));
       return;
     }
     this.save.money -= h.price;
     this.save.ownedHouses.push(h.id);
     h.mesh.material = std(0x3d8f6e);
     h.door.material = std(0xe7c36a);
-    this._say(`Jij bezit nu ${h.name}.`);
+    this._say(tr('boughtHouse', { name: tr(h.nameKey) }));
     if (this.audio) this.audio.playLockSound();
   }
 
   _buyItem(item) {
     if (this.save.money < item.price) {
-      this._say('Te duur.');
+      this._say(tr('tooExpensive'));
       return;
     }
     this.save.money -= item.price;
     if (item.kind === 'clothes') {
       const colors = [0xff7a6a, 0x7dffd4, 0x4aa3ff, 0xe7c36a];
       recolorTop(this.player, colors[Math.floor(Math.random() * colors.length)]);
-      this._say('Nieuwe outfit.');
+      this._say(tr('newOutfit'));
     } else {
       this.save.ownedCar = 'sport';
       const sport = createChaseCar(0xc43c32);
       sport.position.set(this.player.position.x + 3, 0.15, this.player.position.z);
       this.scene.add(sport);
       this.cars.push({ mesh: sport, yaw: this.mover.yaw, taken: false, speed: 0, owned: true });
-      this._say('Sportwagen is van jou.');
+      this._say(tr('newCar'));
     }
     if (this.audio) this.audio.playLockSound();
   }
@@ -580,14 +582,14 @@ export class FreedomCity {
     this.interior.position.set(h.x, 0.2, h.z);
     this.scene.add(this.interior);
     this.player.position.set(h.x, 0, h.z);
-    this._say('Thuis. E om naar buiten te gaan.');
+    this._say(tr('homeHint'));
   }
 
   _updateHouse(dt, input) {
     poseIdle(this.player, this.time);
     this.camera.position.lerp(new THREE.Vector3(this.inHouse.x, 3.2, this.inHouse.z + 5.5), 1 - Math.exp(-6 * dt));
     this.camera.lookAt(this.inHouse.x, 1.2, this.inHouse.z);
-    this.prompt = { key: 'E', text: 'Ga naar buiten' };
+    this.prompt = { key: 'E', text: tr('goOutside') };
     if (this._pressed(input)) {
       this.scene.remove(this.interior);
       this.interior = null;
@@ -606,8 +608,8 @@ export class FreedomCity {
       const dist = Math.hypot(p.x - target.x, p.z - target.z);
       const active = this.job?.id === m.id;
       return {
-        name: m.name,
-        dist: active && this.job.phase === 'drop' ? `${(dist).toFixed(0)} m afleveren` : `${dist.toFixed(0)} m`,
+        name: tr(m.nameKey),
+        dist: active && this.job.phase === 'drop' ? tr('metersDrop', { n: dist.toFixed(0) }) : tr('meters', { n: dist.toFixed(0) }),
         meters: dist,
         active,
         x: target.x,
@@ -626,23 +628,24 @@ export class FreedomCity {
       navAngle = THREE.MathUtils.radToDeg(bearing - yaw);
     }
 
-    let obj = 'Loop naar een <b>groen licht</b>. Ga erin staan en druk op <b>E</b> om een job te starten.';
-    let jobHint = 'Groen licht = job. E = starten. Daarna de pijl volgen.';
+    let obj = tr('objJobs');
+    let jobHint = tr('jobsHint');
     if (this.job) {
+      const jn = tr(this.job.nameKey);
       if (this.job.phase === 'drop') {
-        obj = `JOB BEZIG · ${this.job.name}<br>Volg de gele pijl naar het gele licht. Druk daar op E.`;
-        jobHint = 'Geel licht = afleveren. Druk op E voor je geld.';
+        obj = tr('objDrop', { name: jn });
+        jobHint = tr('jobHintDrop');
       } else {
-        obj = `JOB BEZIG · ${this.job.name}<br>Blijf 4 seconden bij het licht staan.`;
-        jobHint = 'Niet weglopen. De balk telt af.';
+        obj = tr('objWork', { name: jn });
+        jobHint = tr('jobHintWork');
       }
     }
     if (this.job?.phase === 'drop' && this.job.drop && this._near(this.job.drop.x, this.job.drop.z, 8)) {
-      this.prompt = this.prompt || { key: 'E', job: true, text: `Lever af: ${this.job.name}  ·  +€${this.job.pay}` };
+      this.prompt = this.prompt || { key: 'E', job: true, text: tr('deliverJob', { name: tr(this.job.nameKey), pay: this.job.pay }) };
     }
     return {
-      badge: this.wanted > 0.4 ? 'GEZOCHT' : 'BRUSSEL',
-      loc: this.car ? 'ONDERWEG' : (this.inHouse ? 'THUIS' : 'VRIJ SPEL'),
+      badge: this.wanted > 0.4 ? tr('wanted') : tr('brussels'),
+      loc: this.car ? tr('onRoad') : (this.inHouse ? tr('atHome') : tr('freePlay')),
       money: this.save.money || 0,
       obj,
       prompt: this.prompt,

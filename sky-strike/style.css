@@ -340,6 +340,19 @@ canvas#game-canvas {
   padding-bottom: 8px;
 }
 .toggle, select, input[type="range"] { accent-color: var(--hud); }
+#set-language {
+  max-width: min(260px, 58vw);
+  font-size: 0.82rem;
+  padding: 6px 8px;
+  background: #123;
+  color: var(--hud);
+  border: 1px solid var(--line);
+  font-family: Rajdhani, sans-serif;
+}
+.lang-setting { align-items: flex-start; }
+body.rtl .menu-panel, body.rtl .panel, body.rtl .story-card { direction: rtl; text-align: right; }
+body.rtl .job-panel { right: auto; left: 12px; }
+body.rtl .objectives { left: auto; right: 12px; }
 .toggle {
   min-width: 64px;
   padding: 6px 10px;

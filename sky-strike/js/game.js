@@ -18,6 +18,7 @@ import { CharacterStudio } from './character.js';
 import { AirportTerminal } from './airport.js';
 import { PassengerFlight } from './airliner.js';
 import { FreedomCity } from './freedom.js';
+import { tr } from './i18n.js';
 
 const _fwd = new THREE.Vector3();
 const _to = new THREE.Vector3();
@@ -189,7 +190,7 @@ export class Game {
 
   async startDrive(character, friend) {
     this.story = { character, friend };
-    this.onState('LOADING', { name: 'TESLA MODEL X', briefing: 'Keulen. Autobahn. Boeven in de achtervolging.', tod: 'DAY' });
+    this.onState('LOADING', { name: tr('loadDrive'), briefing: tr('loadDriveBrief'), tod: 'DAY' });
     await new Promise((r) => setTimeout(r, 60));
     this._clearScene();
     this.drive = new DriveChase(this.scene, this.camera, this.audio, character, friend);
@@ -239,7 +240,7 @@ export class Game {
   }
 
   async startAirport() {
-    this.onState('LOADING', { name: 'VLIEGVELD KEULEN', briefing: 'Koop een ticket naar Brussel en board het toestel.' });
+    this.onState('LOADING', { name: tr('loadAirport'), briefing: tr('loadAirportBrief') });
     await new Promise((r) => setTimeout(r, 50));
     this._clearScene();
     this.airport = new AirportTerminal(this.scene, this.camera, this.audio, this.story.character, this.story.friend, this.save);
@@ -252,7 +253,7 @@ export class Game {
   }
 
   async startFlight() {
-    this.onState('LOADING', { name: 'VLUCHT NAAR BRUSSEL', briefing: 'Stoel 12A. Je vliegt als passagier van Duitsland naar België.' });
+    this.onState('LOADING', { name: tr('loadFlight'), briefing: tr('loadFlightBrief') });
     await new Promise((r) => setTimeout(r, 50));
     this._clearScene();
     this.flight = new PassengerFlight(this.scene, this.camera, this.audio, this.story.character, this.story.friend);
@@ -267,7 +268,7 @@ export class Game {
   async startFreedom() {
     this.save.freedomUnlocked = true;
     if (!this.save.money) this.save.money = 220;
-    this.onState('LOADING', { name: 'BRUSSEL', briefing: 'Freedom. Verdien geld, koop een huis, doe wat je wilt.' });
+    this.onState('LOADING', { name: tr('loadFreedom'), briefing: tr('loadFreedomBrief') });
     await new Promise((r) => setTimeout(r, 50));
     this._clearScene();
     this.city = new FreedomCity(this.scene, this.camera, this.audio, this.story.character, this.story.friend, this.save);
