@@ -210,17 +210,19 @@ export class FreedomCity {
     this.scene.add(hall, spire);
     aabb(0, 72, 22, 16, this.colliders);
 
+    // East sidewalk of the main road, north of spawn — clear of every crossroads
     const shop = new THREE.Mesh(new THREE.BoxGeometry(12, 5, 10), std(0x2266aa));
-    shop.position.set(36, 2.5, 0);
+    shop.position.set(14, 2.5, 26);
     this.scene.add(shop);
-    aabb(36, 0, 12, 10, this.colliders);
-    this.shopPos = new THREE.Vector3(36, 0, 8);
+    aabb(14, 26, 12, 10, this.colliders);
+    this.shopPos = new THREE.Vector3(8, 0, 26);
 
+    // West sidewalk of the x=-36 road, north of the crossroads
     const bank = new THREE.Mesh(new THREE.BoxGeometry(10, 6, 10), std(0xe7c36a));
-    bank.position.set(-36, 3, 0);
+    bank.position.set(-28, 3, 16);
     this.scene.add(bank);
-    aabb(-36, 0, 10, 10, this.colliders);
-    this.atmPos = new THREE.Vector3(-36, 0, 8);
+    aabb(-28, 16, 10, 10, this.colliders);
+    this.atmPos = new THREE.Vector3(-22, 0, 16);
 
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 6, 6), std(0x444));
     pole.position.set(4, 3, -4);
