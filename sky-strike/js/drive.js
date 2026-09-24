@@ -222,7 +222,7 @@ export class DriveChase {
     this.scene.add(tarmac, hall, tower);
   }
 
-  update(dt, input) {
+  update(dt, input, cam = {}) {
     if (this.finished || this.failed) return this.failed ? 'fail' : 'win';
     this.time += dt;
     this.hitCd = Math.max(0, this.hitCd - dt);
@@ -269,14 +269,16 @@ export class DriveChase {
       return 'win';
     }
 
+    const back = cam.eyes ? 2.2 : Math.max(5.5, 4 + (cam.dist ?? 6.4) * 0.7);
+    const high = cam.eyes ? 1.6 : Math.max(2.8, 2.2 + (cam.height ?? 2.8) * 0.55);
     this._cam.set(
       this.car.position.x * 0.35,
-      4.2 + this.shake * 0.8,
-      this.car.position.z - 9.5
+      high + this.shake * 0.8,
+      this.car.position.z - back
     );
     this._cam.x += (Math.random() - 0.5) * this.shake;
     this.camera.position.lerp(this._cam, 1 - Math.exp(-6 * dt));
-    this._look.set(this.car.position.x, 1.2, this.car.position.z + 14);
+    this._look.set(this.car.position.x, cam.eyes ? 1.1 : 1.2, this.car.position.z + 14);
     this.camera.up.set(0, 1, 0);
     this.camera.lookAt(this._look);
     return 'ok';

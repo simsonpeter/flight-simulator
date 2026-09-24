@@ -104,7 +104,7 @@ export class AirportTerminal {
     this.scene.add(this.friendMesh);
   }
 
-  update(dt, input) {
+  update(dt, input, cam = {}) {
     this.time += dt;
     this.mover.update(dt, input, this.colliders, this.time);
     this.friendMesh.position.lerp(
@@ -116,7 +116,12 @@ export class AirportTerminal {
     this.friendMesh.rotation.set(0, Math.atan2(fdx, fdz), 0);
     poseWalk(this.friendMesh, this.time, this.mover.speed * 0.8);
     poseIdle(this.clerk, this.time);
-    followCam(this.camera, this.player.position, this.mover.yaw, dt, { dist: 5.6, height: 2.5 });
+    this.player.visible = !cam.eyes;
+    followCam(this.camera, this.player.position, this.mover.yaw, dt, {
+      dist: cam.dist ?? 5.6,
+      height: cam.height ?? 2.5,
+      lookY: cam.lookY ?? 1.35
+    });
 
     const pz = this.player.position.z;
     const px = this.player.position.x;

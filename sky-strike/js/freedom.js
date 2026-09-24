@@ -328,7 +328,7 @@ export class FreedomCity {
     this.car = null;
   }
 
-  _drive(dt, input) {
+  _drive(dt, input, cam = {}) {
     const c = this.car;
     const accel = (input.throttle > 0 || input.pitch > 0.15) ? 1 : (input.throttle < 0 || input.pitch < -0.2 ? -0.6 : 0);
     const brake = input.airbrake;
@@ -350,14 +350,19 @@ export class FreedomCity {
     this.player.position.copy(c.mesh.position);
     this.mover.yaw = c.yaw;
     if (this.audio) this.audio.playEngineSound(Math.min(1, Math.abs(c.speed) / 22), !!boost, true);
-    followCam(this.camera, c.mesh.position, c.yaw, dt, { dist: 8.5, height: 3.6, lookY: 1.1 });
+    const dist = cam.eyes ? 0.8 : Math.max(4, (cam.dist ?? 8.5) * 1.15);
+    followCam(this.camera, c.mesh.position, c.yaw, dt, {
+      dist,
+      height: cam.eyes ? 1.35 : (cam.height ?? 3.6),
+      lookY: cam.lookY ?? 1.1
+    });
   }
 
   _carHit(x, z) {
     return this.colliders.some((c) => x > c.minX - 1.4 && x < c.maxX + 1.4 && z > c.minZ - 2.2 && z < c.maxZ + 2.2);
   }
 
-  update(dt, input) {
+  update(dt, input, cam = {}) {
     this.time += dt;
     this.toastT = Math.max(0, this.toastT - dt);
     this.wanted = Math.max(0, this.wanted - dt * 0.12);
@@ -388,7 +393,7 @@ export class FreedomCity {
     }
 
     if (this.car) {
-      this._drive(dt, input);
+      this._drive(dt, input, cam);
       this._jobTick(dt);
       this.tryDeliver(input);
       if (!(this.job?.phase === 'drop' && this.job.drop && this._near(this.job.drop.x, this.job.drop.z, 4.2))) {
@@ -399,7 +404,12 @@ export class FreedomCity {
     }
 
     this.mover.update(dt, input, this.colliders, this.time);
-    followCam(this.camera, this.player.position, this.mover.yaw, dt);
+    this.player.visible = !cam.eyes;
+    followCam(this.camera, this.player.position, this.mover.yaw, dt, {
+      dist: cam.dist ?? 6.4,
+      height: cam.height ?? 2.8,
+      lookY: cam.lookY ?? 1.35
+    });
     this._pulseBeacons(dt);
 
     this._interactWorld(input);
@@ -588,6 +598,7 @@ export class FreedomCity {
   }
 
   _updateHouse(dt, input) {
+    this.player.visible = true;
     poseIdle(this.player, this.time);
     this.camera.position.lerp(new THREE.Vector3(this.inHouse.x, 3.2, this.inHouse.z + 5.5), 1 - Math.exp(-6 * dt));
     this.camera.lookAt(this.inHouse.x, 1.2, this.inHouse.z);

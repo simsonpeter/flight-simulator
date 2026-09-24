@@ -86,6 +86,9 @@ export class Game {
     this.flight = null;
     this.city = null;
     this.story = { character: null, friend: null };
+    this.groundCamDist = 6.4;
+    this._groundViews = [0.45, 3.6, 6.4, 11.5];
+    this._pinchLast = 0;
 
     const hooks = {
       onCamera: () => this.cycleCamera(),
@@ -101,12 +104,82 @@ export class Game {
     this.desktop = new DesktopControls(this.input, canvas, hooks);
     this.desktop.skipKeyboard = this.mobile;
     this.touch = new MobileControls(this.input, hooks);
+    this._bindPinchZoom();
 
     window.addEventListener('resize', () => this.resize());
     window.visualViewport?.addEventListener('resize', () => this.resize());
     this._buildAttract();
     this._loop = this._loop.bind(this);
     requestAnimationFrame(this._loop);
+  }
+
+  _groundMode() {
+    const m = this.mode === 'PAUSED' ? this._resumeMode : this.mode;
+    return m === 'FREEDOM' || m === 'AIRPORT' || m === 'DRIVING';
+  }
+
+  _bindPinchZoom() {
+    const onStart = (e) => {
+      if (e.touches.length === 2) {
+        this._pinchLast = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+      }
+    };
+    const onMove = (e) => {
+      if (e.touches.length !== 2 || !this._groundMode()) return;
+      e.preventDefault();
+      const d = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      if (this._pinchLast > 8) {
+        const factor = this._pinchLast / Math.max(8, d);
+        this.groundCamDist = Math.max(0.4, Math.min(18, this.groundCamDist * factor));
+      }
+      this._pinchLast = d;
+    };
+    const onEnd = (e) => {
+      if (e.touches.length < 2) this._pinchLast = 0;
+    };
+    const opts = { passive: false };
+    window.addEventListener('touchstart', onStart, { passive: true });
+    window.addEventListener('touchmove', onMove, opts);
+    window.addEventListener('touchend', onEnd, { passive: true });
+    window.addEventListener('touchcancel', onEnd, { passive: true });
+  }
+
+  getGroundCam() {
+    const dist = this.groundCamDist;
+    const eyes = dist < 1.35;
+    const height = eyes ? 1.55 : Math.min(6.8, 1.25 + dist * 0.3);
+    const lookY = eyes ? 1.5 : 1.35;
+    const fov = eyes ? 78 : Math.max(58, Math.min(76, 70 - (dist - 6.4) * 0.6));
+    return { dist: eyes ? 0.22 : dist, height, lookY, eyes, fov };
+  }
+
+  _applyGroundCam() {
+    const g = this.getGroundCam();
+    if (Math.abs(this.camera.fov - g.fov) > 0.15) {
+      this.camera.fov = g.fov;
+      this.camera.updateProjectionMatrix();
+    }
+    return g;
+  }
+
+  _cycleGroundView() {
+    const list = this._groundViews;
+    let best = 0;
+    let bestDiff = Infinity;
+    for (let i = 0; i < list.length; i++) {
+      const d = Math.abs(list[i] - this.groundCamDist);
+      if (d < bestDiff) {
+        bestDiff = d;
+        best = i;
+      }
+    }
+    this.groundCamDist = list[(best + 1) % list.length];
   }
 
   _pixelRatio() {
@@ -190,6 +263,10 @@ export class Game {
     this.touch.show(this.mobile);
     this.hud.show(true);
     this.touch.syncThrottle(0);
+    if (this.camera.fov !== 70) {
+      this.camera.fov = 70;
+      this.camera.updateProjectionMatrix();
+    }
     document.getElementById('mobile-controls')?.classList.remove('drive-mode', 'walk-mode');
     this.onState('PLAYING', this.missionDef);
     if (this.missionDef.id === 1) this.hud.toast('SHIFT: GAS  ·  S: STIJGEN  ·  naar België');
@@ -208,6 +285,7 @@ export class Game {
     this.drive.build();
     this.paused = false;
     this.mode = 'DRIVING';
+    this.groundCamDist = 6.4;
     this.absThrottle = this.mobile ? 0 : null;
     this.input.resetAxes();
     this.desktop.setEnabled(true);
@@ -228,6 +306,7 @@ export class Game {
   }
 
   _walkHud() {
+    this.groundCamDist = 6.4;
     this.absThrottle = this.mobile ? 0 : null;
     this.desktop.setEnabled(true);
     this.touch.setMode('walk');
@@ -309,7 +388,7 @@ export class Game {
 
   _updateAirport(dt) {
     this.desktop.update();
-    const status = this.airport.update(dt, this.input);
+    const status = this.airport.update(dt, this.input, this._applyGroundCam());
     this.input.interact = false;
     this.onState('LIFE_HUD', this.airport.hud());
     if (status === 'board') {
@@ -335,7 +414,7 @@ export class Game {
 
   _updateFreedom(dt) {
     this.desktop.update();
-    this.city.update(dt, this.input);
+    this.city.update(dt, this.input, this._applyGroundCam());
     this.input.interact = false;
     this.onState('LIFE_HUD', this.city.hud());
   }
@@ -343,7 +422,7 @@ export class Game {
   _updateDrive(dt) {
     this.desktop.update();
     if (this.mobile && this.absThrottle != null && this.absThrottle > 0.08) this.input.throttle = 1;
-    const status = this.drive.update(dt, this.input);
+    const status = this.drive.update(dt, this.input, this._applyGroundCam());
     this.audio.playEngineSound(Math.min(1, this.drive.speed / 50), !!this.input.afterburner, true);
     this.onState('DRIVE_HUD', this.drive.hud());
     if (status === 'win') {
@@ -402,6 +481,10 @@ export class Game {
   }
 
   cycleCamera() {
+    if (this._groundMode()) {
+      this._cycleGroundView();
+      return;
+    }
     this.cam.cycle();
   }
 
